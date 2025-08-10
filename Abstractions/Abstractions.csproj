@@ -4,8 +4,4 @@
     <PackageReference Include="Testably.Abstractions" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Analyzers\EnumOrderingAnalyzer\EnumOrderingAnalyzer.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
-  </ItemGroup>
-
 </Project>
