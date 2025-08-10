@@ -1,0 +1,36 @@
+// Copyright (c) ktsu.dev
+// All rights reserved.
+// Licensed under the MIT license.
+
+namespace ktsu.Abstractions.Models;
+
+/// <summary>
+/// Specifies the encryption algorithm to use for securing serialized data.
+/// </summary>
+public enum EncryptionType
+{
+	/// <summary>
+	/// No encryption.
+	/// </summary>
+	None = 0,
+
+	/// <summary>
+	/// AES encryption with GCM mode (authenticated encryption).
+	/// </summary>
+	AESGCM,
+
+	/// <summary>
+	/// ChaCha20-Poly1305 authenticated encryption.
+	/// </summary>
+	ChaCha20Poly1305,
+
+	/// <summary>
+	/// RSA encryption with OAEP padding.
+	/// </summary>
+	RSAOAEP,
+
+	/// <summary>
+	/// XChaCha20-Poly1305 authenticated encryption.
+	/// </summary>
+	XChaCha20Poly1305
+}
