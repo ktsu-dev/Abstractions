@@ -1,6 +1,7 @@
 ﻿<Project Sdk="ktsu.Sdk.Lib">
 
   <ItemGroup>
+    <PackageReference Include="System.Memory" />
     <PackageReference Include="Testably.Abstractions" />
   </ItemGroup>
 

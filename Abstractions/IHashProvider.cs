@@ -4,41 +4,57 @@
 
 namespace ktsu.Abstractions;
 
+using System;
+using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
+
 /// <summary>
-/// Interface for compression providers that can compress and decompress data.
+/// Interface for hash providers that can hash data.
 /// </summary>
 public interface IHashProvider
 {
 	/// <summary>
-	/// Compresses the specified data.
+	/// Hashes the specified data (synchronous, canonical input type).
 	/// </summary>
-	/// <param name="data">The data to compress.</param>
-	/// <param name="level">The compression level (1-9, where 9 is maximum compression).</param>
-	/// <returns>The compressed data.</returns>
-	public byte[] Compress(byte[] data, int level = 6);
+	/// <param name="data">The data to hash.</param>
+	/// <returns>The binary hash of the data.</returns>
+	public byte[] Hash(ReadOnlySpan<byte> data);
 
 	/// <summary>
-	/// Decompresses the specified compressed data.
+	/// Asynchronously hashes the specified data (canonical async input type).
+	/// Default implementation wraps the synchronous <see cref="Hash(ReadOnlySpan{byte})"/>.
 	/// </summary>
-	/// <param name="compressedData">The compressed data to decompress.</param>
-	/// <returns>The decompressed data.</returns>
-	public byte[] Decompress(byte[] compressedData);
+	/// <param name="data">The data to hash.</param>
+	/// <param name="cancellationToken">The cancellation token.</param>
+	/// <returns>The binary hash of the data.</returns>
+	public Task<byte[]> HashAsync(ReadOnlyMemory<byte> data, CancellationToken cancellationToken = default)
+		=> cancellationToken.IsCancellationRequested
+			? Task.FromCanceled<byte[]>(cancellationToken)
+			: Task.Run(() => Hash(data.Span), cancellationToken);
 
 	/// <summary>
-	/// Asynchronously compresses the specified data.
+	/// Asynchronously hashes data from a stream. Implementers should read the stream and compute the hash.
 	/// </summary>
-	/// <param name="data">The data to compress.</param>
-	/// <param name="level">The compression level (1-9, where 9 is maximum compression).</param>
-	/// <param name="cancellationToken">A cancellation token.</param>
-	/// <returns>A task that represents the asynchronous compression operation.</returns>
-	public Task<byte[]> CompressAsync(byte[] data, int level = 6, CancellationToken cancellationToken = default);
+	/// <param name="data">The stream to read and hash.</param>
+	/// <param name="cancellationToken">The cancellation token.</param>
+	/// <returns>The binary hash of the stream contents.</returns>
+	public Task<byte[]> HashAsync(Stream data, CancellationToken cancellationToken = default);
+
 
 	/// <summary>
-	/// Asynchronously decompresses the specified compressed data.
+	/// Convenience overload that forwards to the canonical span-based method.
 	/// </summary>
-	/// <param name="compressedData">The compressed data to decompress.</param>
-	/// <param name="cancellationToken">A cancellation token.</param>
-	/// <returns>A task that represents the asynchronous decompression operation.</returns>
-	public Task<byte[]> DecompressAsync(byte[] compressedData, CancellationToken cancellationToken = default);
+	/// <param name="data">The data to hash.</param>
+	/// <returns>The binary hash of the data.</returns>
+	public byte[] Hash(byte[] data) => Hash(data.AsSpan());
+
+	/// <summary>
+	/// Convenience overload that forwards to the canonical memory-based async method.
+	/// </summary>
+	/// <param name="data">The data to hash.</param>
+	/// <param name="cancellationToken">The cancellation token.</param>
+	/// <returns>The binary hash of the data.</returns>
+	public Task<byte[]> HashAsync(byte[] data, CancellationToken cancellationToken = default)
+		=> HashAsync(data.AsMemory(), cancellationToken);
 }
-
