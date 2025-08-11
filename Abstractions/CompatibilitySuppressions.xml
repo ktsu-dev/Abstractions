@@ -2,122 +2,596 @@
 <!-- https://learn.microsoft.com/dotnet/fundamentals/package-validation/diagnostic-ids -->
 <Suppressions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <Suppression>
-    <DiagnosticId>CP0008</DiagnosticId>
-    <Target>T:ktsu.Abstractions.Models.CompressionType</Target>
-    <Left>lib/net7.0/ktsu.Abstractions.dll</Left>
-    <Right>lib/net8.0/ktsu.Abstractions.dll</Right>
-  </Suppression>
-  <Suppression>
-    <DiagnosticId>CP0008</DiagnosticId>
-    <Target>T:ktsu.Abstractions.Models.EncryptionType</Target>
-    <Left>lib/net7.0/ktsu.Abstractions.dll</Left>
-    <Right>lib/net8.0/ktsu.Abstractions.dll</Right>
-  </Suppression>
-  <Suppression>
-    <DiagnosticId>CP0008</DiagnosticId>
-    <Target>T:ktsu.Abstractions.Models.FileSystemType</Target>
-    <Left>lib/net7.0/ktsu.Abstractions.dll</Left>
-    <Right>lib/net8.0/ktsu.Abstractions.dll</Right>
-  </Suppression>
-  <Suppression>
-    <DiagnosticId>CP0008</DiagnosticId>
-    <Target>T:ktsu.Abstractions.Models.HashType</Target>
-    <Left>lib/net7.0/ktsu.Abstractions.dll</Left>
-    <Right>lib/net8.0/ktsu.Abstractions.dll</Right>
-  </Suppression>
-  <Suppression>
-    <DiagnosticId>CP0008</DiagnosticId>
-    <Target>T:ktsu.Abstractions.Models.ObfuscationType</Target>
+    <DiagnosticId>CP0016</DiagnosticId>
+    <Target>M:ktsu.Abstractions.ICompressionProvider.Compress(System.ReadOnlySpan{System.Byte})-&gt;byte[]:[T:System.Runtime.CompilerServices.NullableAttribute]</Target>
     <Left>lib/net7.0/ktsu.Abstractions.dll</Left>
     <Right>lib/net8.0/ktsu.Abstractions.dll</Right>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0016</DiagnosticId>
-    <Target>M:ktsu.Abstractions.IEncryptionProvider.Decrypt(System.Byte[],System.Byte[],System.Byte[])$2:[T:System.Runtime.CompilerServices.NullableAttribute]</Target>
+    <Target>M:ktsu.Abstractions.ICompressionProvider.Compress(System.ReadOnlySpan{System.Byte}):[T:System.Runtime.CompilerServices.NullableContextAttribute]</Target>
     <Left>lib/net7.0/ktsu.Abstractions.dll</Left>
     <Right>lib/net8.0/ktsu.Abstractions.dll</Right>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0016</DiagnosticId>
-    <Target>M:ktsu.Abstractions.IEncryptionProvider.DecryptAsync(System.Byte[],System.Byte[],System.Byte[],System.Threading.CancellationToken)$2:[T:System.Runtime.CompilerServices.NullableAttribute]</Target>
+    <Target>M:ktsu.Abstractions.ICompressionProvider.CompressAsync(System.ReadOnlyMemory{System.Byte},System.Threading.CancellationToken)-&gt;System.Threading.Tasks.Task&lt;byte[]&gt;:[T:System.Runtime.CompilerServices.NullableAttribute]</Target>
     <Left>lib/net7.0/ktsu.Abstractions.dll</Left>
     <Right>lib/net8.0/ktsu.Abstractions.dll</Right>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0016</DiagnosticId>
-    <Target>M:ktsu.Abstractions.IEncryptionProvider.Encrypt(System.Byte[],System.Byte[],System.Byte[])$2:[T:System.Runtime.CompilerServices.NullableAttribute]</Target>
+    <Target>M:ktsu.Abstractions.ICompressionProvider.CompressAsync(System.ReadOnlyMemory{System.Byte},System.Threading.CancellationToken):[T:System.Runtime.CompilerServices.NullableContextAttribute]</Target>
     <Left>lib/net7.0/ktsu.Abstractions.dll</Left>
     <Right>lib/net8.0/ktsu.Abstractions.dll</Right>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0016</DiagnosticId>
-    <Target>M:ktsu.Abstractions.IEncryptionProvider.EncryptAsync(System.Byte[],System.Byte[],System.Byte[],System.Threading.CancellationToken)$2:[T:System.Runtime.CompilerServices.NullableAttribute]</Target>
+    <Target>M:ktsu.Abstractions.ICompressionProvider.Decompress(System.ReadOnlySpan{System.Byte})-&gt;byte[]:[T:System.Runtime.CompilerServices.NullableAttribute]</Target>
     <Left>lib/net7.0/ktsu.Abstractions.dll</Left>
     <Right>lib/net8.0/ktsu.Abstractions.dll</Right>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0016</DiagnosticId>
-    <Target>M:ktsu.Abstractions.IObfuscationProvider.Deobfuscate(System.Byte[],System.Collections.Generic.IReadOnlyDictionary{System.String,System.Object})$1:[T:System.Runtime.CompilerServices.NullableAttribute]</Target>
+    <Target>M:ktsu.Abstractions.ICompressionProvider.Decompress(System.ReadOnlySpan{System.Byte}):[T:System.Runtime.CompilerServices.NullableContextAttribute]</Target>
     <Left>lib/net7.0/ktsu.Abstractions.dll</Left>
     <Right>lib/net8.0/ktsu.Abstractions.dll</Right>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0016</DiagnosticId>
-    <Target>M:ktsu.Abstractions.IObfuscationProvider.DeobfuscateAsync(System.Byte[],System.Collections.Generic.IReadOnlyDictionary{System.String,System.Object},System.Threading.CancellationToken)$1:[T:System.Runtime.CompilerServices.NullableAttribute]</Target>
+    <Target>M:ktsu.Abstractions.ICompressionProvider.DecompressAsync(System.ReadOnlyMemory{System.Byte},System.Threading.CancellationToken)-&gt;System.Threading.Tasks.Task&lt;byte[]&gt;:[T:System.Runtime.CompilerServices.NullableAttribute]</Target>
     <Left>lib/net7.0/ktsu.Abstractions.dll</Left>
     <Right>lib/net8.0/ktsu.Abstractions.dll</Right>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0016</DiagnosticId>
-    <Target>M:ktsu.Abstractions.IObfuscationProvider.Obfuscate(System.Byte[],System.Collections.Generic.IReadOnlyDictionary{System.String,System.Object})$1:[T:System.Runtime.CompilerServices.NullableAttribute]</Target>
+    <Target>M:ktsu.Abstractions.ICompressionProvider.DecompressAsync(System.ReadOnlyMemory{System.Byte},System.Threading.CancellationToken):[T:System.Runtime.CompilerServices.NullableContextAttribute]</Target>
     <Left>lib/net7.0/ktsu.Abstractions.dll</Left>
     <Right>lib/net8.0/ktsu.Abstractions.dll</Right>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0016</DiagnosticId>
-    <Target>M:ktsu.Abstractions.IObfuscationProvider.ObfuscateAsync(System.Byte[],System.Collections.Generic.IReadOnlyDictionary{System.String,System.Object},System.Threading.CancellationToken)$1:[T:System.Runtime.CompilerServices.NullableAttribute]</Target>
+    <Target>M:ktsu.Abstractions.ICompressionProvider.TryCompress(System.ReadOnlySpan{System.Byte},System.IO.Stream):[T:System.Runtime.CompilerServices.NullableContextAttribute]</Target>
     <Left>lib/net7.0/ktsu.Abstractions.dll</Left>
     <Right>lib/net8.0/ktsu.Abstractions.dll</Right>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0016</DiagnosticId>
-    <Target>M:ktsu.Abstractions.ISerializationProvider.Deserialize``1(System.String)&lt;0&gt;:[T:System.Runtime.CompilerServices.NullableAttribute]</Target>
+    <Target>M:ktsu.Abstractions.ICompressionProvider.TryCompress(System.ReadOnlySpan{System.Byte},System.IO.Stream)$1:[T:System.Runtime.CompilerServices.NullableAttribute]</Target>
     <Left>lib/net7.0/ktsu.Abstractions.dll</Left>
     <Right>lib/net8.0/ktsu.Abstractions.dll</Right>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0016</DiagnosticId>
-    <Target>M:ktsu.Abstractions.ISerializationProvider.DeserializeAsync``1(System.String,System.Threading.CancellationToken)&lt;0&gt;:[T:System.Runtime.CompilerServices.NullableAttribute]</Target>
+    <Target>M:ktsu.Abstractions.ICompressionProvider.TryCompress(System.ReadOnlySpan{System.Byte},System.Span{System.Byte}):[T:System.Runtime.CompilerServices.NullableContextAttribute]</Target>
     <Left>lib/net7.0/ktsu.Abstractions.dll</Left>
     <Right>lib/net8.0/ktsu.Abstractions.dll</Right>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0016</DiagnosticId>
-    <Target>M:ktsu.Abstractions.ISerializationProvider.Serialize``1(``0)&lt;0&gt;:[T:System.Runtime.CompilerServices.NullableAttribute]</Target>
+    <Target>M:ktsu.Abstractions.ICompressionProvider.TryCompressAsync(System.ReadOnlyMemory{System.Byte},System.IO.Stream,System.Threading.CancellationToken)$0:[T:System.Runtime.CompilerServices.NullableAttribute]</Target>
     <Left>lib/net7.0/ktsu.Abstractions.dll</Left>
     <Right>lib/net8.0/ktsu.Abstractions.dll</Right>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0016</DiagnosticId>
-    <Target>M:ktsu.Abstractions.ISerializationProvider.SerializeAsync``1(``0,System.Threading.CancellationToken)&lt;0&gt;:[T:System.Runtime.CompilerServices.NullableAttribute]</Target>
+    <Target>M:ktsu.Abstractions.ICompressionProvider.TryCompressAsync(System.ReadOnlyMemory{System.Byte},System.Memory{System.Byte},System.Threading.CancellationToken)-&gt;System.Threading.Tasks.Task&lt;bool&gt;:[T:System.Runtime.CompilerServices.NullableAttribute]</Target>
+    <Left>lib/net7.0/ktsu.Abstractions.dll</Left>
+    <Right>lib/net8.0/ktsu.Abstractions.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0016</DiagnosticId>
+    <Target>M:ktsu.Abstractions.ICompressionProvider.TryCompressAsync(System.ReadOnlyMemory{System.Byte},System.Memory{System.Byte},System.Threading.CancellationToken):[T:System.Runtime.CompilerServices.NullableContextAttribute]</Target>
+    <Left>lib/net7.0/ktsu.Abstractions.dll</Left>
+    <Right>lib/net8.0/ktsu.Abstractions.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0016</DiagnosticId>
+    <Target>M:ktsu.Abstractions.ICompressionProvider.TryDecompress(System.ReadOnlySpan{System.Byte},System.IO.Stream):[T:System.Runtime.CompilerServices.NullableContextAttribute]</Target>
+    <Left>lib/net7.0/ktsu.Abstractions.dll</Left>
+    <Right>lib/net8.0/ktsu.Abstractions.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0016</DiagnosticId>
+    <Target>M:ktsu.Abstractions.ICompressionProvider.TryDecompress(System.ReadOnlySpan{System.Byte},System.IO.Stream)$1:[T:System.Runtime.CompilerServices.NullableAttribute]</Target>
+    <Left>lib/net7.0/ktsu.Abstractions.dll</Left>
+    <Right>lib/net8.0/ktsu.Abstractions.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0016</DiagnosticId>
+    <Target>M:ktsu.Abstractions.ICompressionProvider.TryDecompress(System.ReadOnlySpan{System.Byte},System.Span{System.Byte}):[T:System.Runtime.CompilerServices.NullableContextAttribute]</Target>
+    <Left>lib/net7.0/ktsu.Abstractions.dll</Left>
+    <Right>lib/net8.0/ktsu.Abstractions.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0016</DiagnosticId>
+    <Target>M:ktsu.Abstractions.ICompressionProvider.TryDecompressAsync(System.ReadOnlyMemory{System.Byte},System.IO.Stream,System.Threading.CancellationToken)$0:[T:System.Runtime.CompilerServices.NullableAttribute]</Target>
+    <Left>lib/net7.0/ktsu.Abstractions.dll</Left>
+    <Right>lib/net8.0/ktsu.Abstractions.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0016</DiagnosticId>
+    <Target>M:ktsu.Abstractions.ICompressionProvider.TryDecompressAsync(System.ReadOnlyMemory{System.Byte},System.Memory{System.Byte},System.Threading.CancellationToken)-&gt;System.Threading.Tasks.Task&lt;bool&gt;:[T:System.Runtime.CompilerServices.NullableAttribute]</Target>
+    <Left>lib/net7.0/ktsu.Abstractions.dll</Left>
+    <Right>lib/net8.0/ktsu.Abstractions.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0016</DiagnosticId>
+    <Target>M:ktsu.Abstractions.ICompressionProvider.TryDecompressAsync(System.ReadOnlyMemory{System.Byte},System.Memory{System.Byte},System.Threading.CancellationToken):[T:System.Runtime.CompilerServices.NullableContextAttribute]</Target>
+    <Left>lib/net7.0/ktsu.Abstractions.dll</Left>
+    <Right>lib/net8.0/ktsu.Abstractions.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0016</DiagnosticId>
+    <Target>M:ktsu.Abstractions.IEncryptionProvider.Decrypt(System.IO.Stream,System.ReadOnlySpan{System.Byte},System.ReadOnlySpan{System.Byte})-&gt;byte[]:[T:System.Runtime.CompilerServices.NullableAttribute]</Target>
+    <Left>lib/net7.0/ktsu.Abstractions.dll</Left>
+    <Right>lib/net8.0/ktsu.Abstractions.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0016</DiagnosticId>
+    <Target>M:ktsu.Abstractions.IEncryptionProvider.Decrypt(System.IO.Stream,System.ReadOnlySpan{System.Byte},System.ReadOnlySpan{System.Byte})$0:[T:System.Runtime.CompilerServices.NullableAttribute]</Target>
+    <Left>lib/net7.0/ktsu.Abstractions.dll</Left>
+    <Right>lib/net8.0/ktsu.Abstractions.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0016</DiagnosticId>
+    <Target>M:ktsu.Abstractions.IEncryptionProvider.Decrypt(System.ReadOnlySpan{System.Byte},System.ReadOnlySpan{System.Byte},System.ReadOnlySpan{System.Byte})-&gt;byte[]:[T:System.Runtime.CompilerServices.NullableAttribute]</Target>
+    <Left>lib/net7.0/ktsu.Abstractions.dll</Left>
+    <Right>lib/net8.0/ktsu.Abstractions.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0016</DiagnosticId>
+    <Target>M:ktsu.Abstractions.IEncryptionProvider.Decrypt(System.String,System.ReadOnlySpan{System.Byte},System.ReadOnlySpan{System.Byte})-&gt;string:[T:System.Runtime.CompilerServices.NullableAttribute]</Target>
+    <Left>lib/net7.0/ktsu.Abstractions.dll</Left>
+    <Right>lib/net8.0/ktsu.Abstractions.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0016</DiagnosticId>
+    <Target>M:ktsu.Abstractions.IEncryptionProvider.Decrypt(System.String,System.ReadOnlySpan{System.Byte},System.ReadOnlySpan{System.Byte})$0:[T:System.Runtime.CompilerServices.NullableAttribute]</Target>
+    <Left>lib/net7.0/ktsu.Abstractions.dll</Left>
+    <Right>lib/net8.0/ktsu.Abstractions.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0016</DiagnosticId>
+    <Target>M:ktsu.Abstractions.IEncryptionProvider.DecryptAsync(System.IO.Stream,System.ReadOnlyMemory{System.Byte},System.ReadOnlyMemory{System.Byte},System.Threading.CancellationToken)-&gt;System.Threading.Tasks.Task&lt;byte[]&gt;:[T:System.Runtime.CompilerServices.NullableAttribute]</Target>
+    <Left>lib/net7.0/ktsu.Abstractions.dll</Left>
+    <Right>lib/net8.0/ktsu.Abstractions.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0016</DiagnosticId>
+    <Target>M:ktsu.Abstractions.IEncryptionProvider.DecryptAsync(System.IO.Stream,System.ReadOnlyMemory{System.Byte},System.ReadOnlyMemory{System.Byte},System.Threading.CancellationToken)$0:[T:System.Runtime.CompilerServices.NullableAttribute]</Target>
+    <Left>lib/net7.0/ktsu.Abstractions.dll</Left>
+    <Right>lib/net8.0/ktsu.Abstractions.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0016</DiagnosticId>
+    <Target>M:ktsu.Abstractions.IEncryptionProvider.DecryptAsync(System.ReadOnlyMemory{System.Byte},System.ReadOnlyMemory{System.Byte},System.ReadOnlyMemory{System.Byte},System.Threading.CancellationToken)-&gt;System.Threading.Tasks.Task&lt;byte[]&gt;:[T:System.Runtime.CompilerServices.NullableAttribute]</Target>
+    <Left>lib/net7.0/ktsu.Abstractions.dll</Left>
+    <Right>lib/net8.0/ktsu.Abstractions.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0016</DiagnosticId>
+    <Target>M:ktsu.Abstractions.IEncryptionProvider.DecryptAsync(System.String,System.ReadOnlyMemory{System.Byte},System.ReadOnlyMemory{System.Byte},System.Threading.CancellationToken)-&gt;System.Threading.Tasks.Task&lt;string&gt;:[T:System.Runtime.CompilerServices.NullableAttribute]</Target>
+    <Left>lib/net7.0/ktsu.Abstractions.dll</Left>
+    <Right>lib/net8.0/ktsu.Abstractions.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0016</DiagnosticId>
+    <Target>M:ktsu.Abstractions.IEncryptionProvider.DecryptAsync(System.String,System.ReadOnlyMemory{System.Byte},System.ReadOnlyMemory{System.Byte},System.Threading.CancellationToken)$0:[T:System.Runtime.CompilerServices.NullableAttribute]</Target>
+    <Left>lib/net7.0/ktsu.Abstractions.dll</Left>
+    <Right>lib/net8.0/ktsu.Abstractions.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0016</DiagnosticId>
+    <Target>M:ktsu.Abstractions.IEncryptionProvider.Encrypt(System.IO.Stream,System.ReadOnlySpan{System.Byte},System.ReadOnlySpan{System.Byte})-&gt;byte[]:[T:System.Runtime.CompilerServices.NullableAttribute]</Target>
+    <Left>lib/net7.0/ktsu.Abstractions.dll</Left>
+    <Right>lib/net8.0/ktsu.Abstractions.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0016</DiagnosticId>
+    <Target>M:ktsu.Abstractions.IEncryptionProvider.Encrypt(System.IO.Stream,System.ReadOnlySpan{System.Byte},System.ReadOnlySpan{System.Byte})$0:[T:System.Runtime.CompilerServices.NullableAttribute]</Target>
+    <Left>lib/net7.0/ktsu.Abstractions.dll</Left>
+    <Right>lib/net8.0/ktsu.Abstractions.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0016</DiagnosticId>
+    <Target>M:ktsu.Abstractions.IEncryptionProvider.Encrypt(System.ReadOnlySpan{System.Byte},System.ReadOnlySpan{System.Byte},System.ReadOnlySpan{System.Byte})-&gt;byte[]:[T:System.Runtime.CompilerServices.NullableAttribute]</Target>
+    <Left>lib/net7.0/ktsu.Abstractions.dll</Left>
+    <Right>lib/net8.0/ktsu.Abstractions.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0016</DiagnosticId>
+    <Target>M:ktsu.Abstractions.IEncryptionProvider.Encrypt(System.String,System.ReadOnlySpan{System.Byte},System.ReadOnlySpan{System.Byte})-&gt;string:[T:System.Runtime.CompilerServices.NullableAttribute]</Target>
+    <Left>lib/net7.0/ktsu.Abstractions.dll</Left>
+    <Right>lib/net8.0/ktsu.Abstractions.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0016</DiagnosticId>
+    <Target>M:ktsu.Abstractions.IEncryptionProvider.Encrypt(System.String,System.ReadOnlySpan{System.Byte},System.ReadOnlySpan{System.Byte})$0:[T:System.Runtime.CompilerServices.NullableAttribute]</Target>
+    <Left>lib/net7.0/ktsu.Abstractions.dll</Left>
+    <Right>lib/net8.0/ktsu.Abstractions.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0016</DiagnosticId>
+    <Target>M:ktsu.Abstractions.IEncryptionProvider.EncryptAsync(System.IO.Stream,System.ReadOnlyMemory{System.Byte},System.ReadOnlyMemory{System.Byte},System.Threading.CancellationToken)-&gt;System.Threading.Tasks.Task&lt;byte[]&gt;:[T:System.Runtime.CompilerServices.NullableAttribute]</Target>
+    <Left>lib/net7.0/ktsu.Abstractions.dll</Left>
+    <Right>lib/net8.0/ktsu.Abstractions.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0016</DiagnosticId>
+    <Target>M:ktsu.Abstractions.IEncryptionProvider.EncryptAsync(System.IO.Stream,System.ReadOnlyMemory{System.Byte},System.ReadOnlyMemory{System.Byte},System.Threading.CancellationToken)$0:[T:System.Runtime.CompilerServices.NullableAttribute]</Target>
+    <Left>lib/net7.0/ktsu.Abstractions.dll</Left>
+    <Right>lib/net8.0/ktsu.Abstractions.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0016</DiagnosticId>
+    <Target>M:ktsu.Abstractions.IEncryptionProvider.EncryptAsync(System.ReadOnlyMemory{System.Byte},System.ReadOnlyMemory{System.Byte},System.ReadOnlyMemory{System.Byte},System.Threading.CancellationToken)-&gt;System.Threading.Tasks.Task&lt;byte[]&gt;:[T:System.Runtime.CompilerServices.NullableAttribute]</Target>
+    <Left>lib/net7.0/ktsu.Abstractions.dll</Left>
+    <Right>lib/net8.0/ktsu.Abstractions.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0016</DiagnosticId>
+    <Target>M:ktsu.Abstractions.IEncryptionProvider.EncryptAsync(System.String,System.ReadOnlyMemory{System.Byte},System.ReadOnlyMemory{System.Byte},System.Threading.CancellationToken)-&gt;System.Threading.Tasks.Task&lt;string&gt;:[T:System.Runtime.CompilerServices.NullableAttribute]</Target>
+    <Left>lib/net7.0/ktsu.Abstractions.dll</Left>
+    <Right>lib/net8.0/ktsu.Abstractions.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0016</DiagnosticId>
+    <Target>M:ktsu.Abstractions.IEncryptionProvider.EncryptAsync(System.String,System.ReadOnlyMemory{System.Byte},System.ReadOnlyMemory{System.Byte},System.Threading.CancellationToken)$0:[T:System.Runtime.CompilerServices.NullableAttribute]</Target>
+    <Left>lib/net7.0/ktsu.Abstractions.dll</Left>
+    <Right>lib/net8.0/ktsu.Abstractions.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0016</DiagnosticId>
+    <Target>M:ktsu.Abstractions.IEncryptionProvider.GenerateIV:[T:System.Runtime.CompilerServices.NullableContextAttribute]</Target>
+    <Left>lib/net7.0/ktsu.Abstractions.dll</Left>
+    <Right>lib/net8.0/ktsu.Abstractions.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0016</DiagnosticId>
+    <Target>M:ktsu.Abstractions.IEncryptionProvider.GenerateKey:[T:System.Runtime.CompilerServices.NullableContextAttribute]</Target>
+    <Left>lib/net7.0/ktsu.Abstractions.dll</Left>
+    <Right>lib/net8.0/ktsu.Abstractions.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0016</DiagnosticId>
+    <Target>M:ktsu.Abstractions.IEncryptionProvider.TryDecrypt(System.IO.Stream,System.ReadOnlySpan{System.Byte},System.ReadOnlySpan{System.Byte},System.IO.Stream)$0:[T:System.Runtime.CompilerServices.NullableAttribute]</Target>
+    <Left>lib/net7.0/ktsu.Abstractions.dll</Left>
+    <Right>lib/net8.0/ktsu.Abstractions.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0016</DiagnosticId>
+    <Target>M:ktsu.Abstractions.IEncryptionProvider.TryDecrypt(System.IO.Stream,System.ReadOnlySpan{System.Byte},System.ReadOnlySpan{System.Byte},System.IO.Stream)$3:[T:System.Runtime.CompilerServices.NullableAttribute]</Target>
+    <Left>lib/net7.0/ktsu.Abstractions.dll</Left>
+    <Right>lib/net8.0/ktsu.Abstractions.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0016</DiagnosticId>
+    <Target>M:ktsu.Abstractions.IEncryptionProvider.TryDecrypt(System.ReadOnlySpan{System.Byte},System.ReadOnlySpan{System.Byte},System.ReadOnlySpan{System.Byte},System.IO.Stream)$3:[T:System.Runtime.CompilerServices.NullableAttribute]</Target>
+    <Left>lib/net7.0/ktsu.Abstractions.dll</Left>
+    <Right>lib/net8.0/ktsu.Abstractions.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0016</DiagnosticId>
+    <Target>M:ktsu.Abstractions.IEncryptionProvider.TryDecryptAsync(System.IO.Stream,System.ReadOnlyMemory{System.Byte},System.ReadOnlyMemory{System.Byte},System.IO.Stream,System.Threading.CancellationToken):[T:System.Runtime.CompilerServices.NullableContextAttribute]</Target>
+    <Left>lib/net7.0/ktsu.Abstractions.dll</Left>
+    <Right>lib/net8.0/ktsu.Abstractions.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0016</DiagnosticId>
+    <Target>M:ktsu.Abstractions.IEncryptionProvider.TryDecryptAsync(System.IO.Stream,System.ReadOnlyMemory{System.Byte},System.ReadOnlyMemory{System.Byte},System.IO.Stream,System.Threading.CancellationToken)$1:[T:System.Runtime.CompilerServices.NullableAttribute]</Target>
+    <Left>lib/net7.0/ktsu.Abstractions.dll</Left>
+    <Right>lib/net8.0/ktsu.Abstractions.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0016</DiagnosticId>
+    <Target>M:ktsu.Abstractions.IEncryptionProvider.TryDecryptAsync(System.IO.Stream,System.ReadOnlyMemory{System.Byte},System.ReadOnlyMemory{System.Byte},System.IO.Stream,System.Threading.CancellationToken)$2:[T:System.Runtime.CompilerServices.NullableAttribute]</Target>
+    <Left>lib/net7.0/ktsu.Abstractions.dll</Left>
+    <Right>lib/net8.0/ktsu.Abstractions.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0016</DiagnosticId>
+    <Target>M:ktsu.Abstractions.IEncryptionProvider.TryDecryptAsync(System.ReadOnlyMemory{System.Byte},System.ReadOnlyMemory{System.Byte},System.ReadOnlyMemory{System.Byte},System.IO.Stream,System.Threading.CancellationToken)-&gt;System.Threading.Tasks.Task&lt;bool&gt;:[T:System.Runtime.CompilerServices.NullableAttribute]</Target>
+    <Left>lib/net7.0/ktsu.Abstractions.dll</Left>
+    <Right>lib/net8.0/ktsu.Abstractions.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0016</DiagnosticId>
+    <Target>M:ktsu.Abstractions.IEncryptionProvider.TryDecryptAsync(System.ReadOnlyMemory{System.Byte},System.ReadOnlyMemory{System.Byte},System.ReadOnlyMemory{System.Byte},System.IO.Stream,System.Threading.CancellationToken)$3:[T:System.Runtime.CompilerServices.NullableAttribute]</Target>
+    <Left>lib/net7.0/ktsu.Abstractions.dll</Left>
+    <Right>lib/net8.0/ktsu.Abstractions.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0016</DiagnosticId>
+    <Target>M:ktsu.Abstractions.IEncryptionProvider.TryDecryptAsync(System.ReadOnlyMemory{System.Byte},System.ReadOnlyMemory{System.Byte},System.ReadOnlyMemory{System.Byte},System.Memory{System.Byte},System.Threading.CancellationToken)-&gt;System.Threading.Tasks.Task&lt;bool&gt;:[T:System.Runtime.CompilerServices.NullableAttribute]</Target>
+    <Left>lib/net7.0/ktsu.Abstractions.dll</Left>
+    <Right>lib/net8.0/ktsu.Abstractions.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0016</DiagnosticId>
+    <Target>M:ktsu.Abstractions.IEncryptionProvider.TryEncrypt(System.IO.Stream,System.ReadOnlySpan{System.Byte},System.ReadOnlySpan{System.Byte},System.IO.Stream)$0:[T:System.Runtime.CompilerServices.NullableAttribute]</Target>
+    <Left>lib/net7.0/ktsu.Abstractions.dll</Left>
+    <Right>lib/net8.0/ktsu.Abstractions.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0016</DiagnosticId>
+    <Target>M:ktsu.Abstractions.IEncryptionProvider.TryEncrypt(System.IO.Stream,System.ReadOnlySpan{System.Byte},System.ReadOnlySpan{System.Byte},System.IO.Stream)$3:[T:System.Runtime.CompilerServices.NullableAttribute]</Target>
+    <Left>lib/net7.0/ktsu.Abstractions.dll</Left>
+    <Right>lib/net8.0/ktsu.Abstractions.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0016</DiagnosticId>
+    <Target>M:ktsu.Abstractions.IEncryptionProvider.TryEncrypt(System.ReadOnlySpan{System.Byte},System.ReadOnlySpan{System.Byte},System.ReadOnlySpan{System.Byte},System.IO.Stream)$3:[T:System.Runtime.CompilerServices.NullableAttribute]</Target>
+    <Left>lib/net7.0/ktsu.Abstractions.dll</Left>
+    <Right>lib/net8.0/ktsu.Abstractions.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0016</DiagnosticId>
+    <Target>M:ktsu.Abstractions.IEncryptionProvider.TryEncryptAsync(System.IO.Stream,System.ReadOnlyMemory{System.Byte},System.ReadOnlyMemory{System.Byte},System.IO.Stream,System.Threading.CancellationToken):[T:System.Runtime.CompilerServices.NullableContextAttribute]</Target>
+    <Left>lib/net7.0/ktsu.Abstractions.dll</Left>
+    <Right>lib/net8.0/ktsu.Abstractions.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0016</DiagnosticId>
+    <Target>M:ktsu.Abstractions.IEncryptionProvider.TryEncryptAsync(System.IO.Stream,System.ReadOnlyMemory{System.Byte},System.ReadOnlyMemory{System.Byte},System.IO.Stream,System.Threading.CancellationToken)$1:[T:System.Runtime.CompilerServices.NullableAttribute]</Target>
+    <Left>lib/net7.0/ktsu.Abstractions.dll</Left>
+    <Right>lib/net8.0/ktsu.Abstractions.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0016</DiagnosticId>
+    <Target>M:ktsu.Abstractions.IEncryptionProvider.TryEncryptAsync(System.IO.Stream,System.ReadOnlyMemory{System.Byte},System.ReadOnlyMemory{System.Byte},System.IO.Stream,System.Threading.CancellationToken)$2:[T:System.Runtime.CompilerServices.NullableAttribute]</Target>
+    <Left>lib/net7.0/ktsu.Abstractions.dll</Left>
+    <Right>lib/net8.0/ktsu.Abstractions.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0016</DiagnosticId>
+    <Target>M:ktsu.Abstractions.IEncryptionProvider.TryEncryptAsync(System.ReadOnlyMemory{System.Byte},System.ReadOnlyMemory{System.Byte},System.ReadOnlyMemory{System.Byte},System.IO.Stream,System.Threading.CancellationToken)-&gt;System.Threading.Tasks.Task&lt;bool&gt;:[T:System.Runtime.CompilerServices.NullableAttribute]</Target>
+    <Left>lib/net7.0/ktsu.Abstractions.dll</Left>
+    <Right>lib/net8.0/ktsu.Abstractions.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0016</DiagnosticId>
+    <Target>M:ktsu.Abstractions.IEncryptionProvider.TryEncryptAsync(System.ReadOnlyMemory{System.Byte},System.ReadOnlyMemory{System.Byte},System.ReadOnlyMemory{System.Byte},System.IO.Stream,System.Threading.CancellationToken)$3:[T:System.Runtime.CompilerServices.NullableAttribute]</Target>
+    <Left>lib/net7.0/ktsu.Abstractions.dll</Left>
+    <Right>lib/net8.0/ktsu.Abstractions.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0016</DiagnosticId>
+    <Target>M:ktsu.Abstractions.IEncryptionProvider.TryEncryptAsync(System.ReadOnlyMemory{System.Byte},System.ReadOnlyMemory{System.Byte},System.ReadOnlyMemory{System.Byte},System.Memory{System.Byte},System.Threading.CancellationToken)-&gt;System.Threading.Tasks.Task&lt;bool&gt;:[T:System.Runtime.CompilerServices.NullableAttribute]</Target>
+    <Left>lib/net7.0/ktsu.Abstractions.dll</Left>
+    <Right>lib/net8.0/ktsu.Abstractions.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0016</DiagnosticId>
+    <Target>M:ktsu.Abstractions.IHashProvider.Hash(System.IO.Stream):[T:System.Runtime.CompilerServices.NullableContextAttribute]</Target>
+    <Left>lib/net7.0/ktsu.Abstractions.dll</Left>
+    <Right>lib/net8.0/ktsu.Abstractions.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0016</DiagnosticId>
+    <Target>M:ktsu.Abstractions.IHashProvider.Hash(System.ReadOnlySpan{System.Byte})-&gt;byte[]:[T:System.Runtime.CompilerServices.NullableAttribute]</Target>
+    <Left>lib/net7.0/ktsu.Abstractions.dll</Left>
+    <Right>lib/net8.0/ktsu.Abstractions.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0016</DiagnosticId>
+    <Target>M:ktsu.Abstractions.IHashProvider.Hash(System.String):[T:System.Runtime.CompilerServices.NullableContextAttribute]</Target>
+    <Left>lib/net7.0/ktsu.Abstractions.dll</Left>
+    <Right>lib/net8.0/ktsu.Abstractions.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0016</DiagnosticId>
+    <Target>M:ktsu.Abstractions.IHashProvider.HashAsync(System.ReadOnlyMemory{System.Byte},System.Threading.CancellationToken)-&gt;System.Threading.Tasks.Task&lt;byte[]&gt;:[T:System.Runtime.CompilerServices.NullableAttribute]</Target>
+    <Left>lib/net7.0/ktsu.Abstractions.dll</Left>
+    <Right>lib/net8.0/ktsu.Abstractions.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0016</DiagnosticId>
+    <Target>M:ktsu.Abstractions.IHashProvider.TryHash(System.IO.Stream,System.Span{System.Byte})$0:[T:System.Runtime.CompilerServices.NullableAttribute]</Target>
+    <Left>lib/net7.0/ktsu.Abstractions.dll</Left>
+    <Right>lib/net8.0/ktsu.Abstractions.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0016</DiagnosticId>
+    <Target>M:ktsu.Abstractions.IHashProvider.TryHashAsync(System.IO.Stream,System.Memory{System.Byte},System.Threading.CancellationToken):[T:System.Runtime.CompilerServices.NullableContextAttribute]</Target>
+    <Left>lib/net7.0/ktsu.Abstractions.dll</Left>
+    <Right>lib/net8.0/ktsu.Abstractions.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0016</DiagnosticId>
+    <Target>M:ktsu.Abstractions.IHashProvider.TryHashAsync(System.IO.Stream,System.Memory{System.Byte},System.Threading.CancellationToken)$1:[T:System.Runtime.CompilerServices.NullableAttribute]</Target>
+    <Left>lib/net7.0/ktsu.Abstractions.dll</Left>
+    <Right>lib/net8.0/ktsu.Abstractions.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0016</DiagnosticId>
+    <Target>M:ktsu.Abstractions.IHashProvider.TryHashAsync(System.ReadOnlyMemory{System.Byte},System.Memory{System.Byte},System.Threading.CancellationToken)-&gt;System.Threading.Tasks.Task&lt;bool&gt;:[T:System.Runtime.CompilerServices.NullableAttribute]</Target>
+    <Left>lib/net7.0/ktsu.Abstractions.dll</Left>
+    <Right>lib/net8.0/ktsu.Abstractions.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0016</DiagnosticId>
+    <Target>M:ktsu.Abstractions.IObfuscationProvider.Deobfuscate(System.ReadOnlySpan{System.Byte})-&gt;byte[]:[T:System.Runtime.CompilerServices.NullableAttribute]</Target>
+    <Left>lib/net7.0/ktsu.Abstractions.dll</Left>
+    <Right>lib/net8.0/ktsu.Abstractions.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0016</DiagnosticId>
+    <Target>M:ktsu.Abstractions.IObfuscationProvider.Deobfuscate(System.ReadOnlySpan{System.Byte}):[T:System.Runtime.CompilerServices.NullableContextAttribute]</Target>
+    <Left>lib/net7.0/ktsu.Abstractions.dll</Left>
+    <Right>lib/net8.0/ktsu.Abstractions.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0016</DiagnosticId>
+    <Target>M:ktsu.Abstractions.IObfuscationProvider.DeobfuscateAsync(System.ReadOnlyMemory{System.Byte},System.Threading.CancellationToken)-&gt;System.Threading.Tasks.Task&lt;byte[]&gt;:[T:System.Runtime.CompilerServices.NullableAttribute]</Target>
+    <Left>lib/net7.0/ktsu.Abstractions.dll</Left>
+    <Right>lib/net8.0/ktsu.Abstractions.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0016</DiagnosticId>
+    <Target>M:ktsu.Abstractions.IObfuscationProvider.DeobfuscateAsync(System.ReadOnlyMemory{System.Byte},System.Threading.CancellationToken):[T:System.Runtime.CompilerServices.NullableContextAttribute]</Target>
+    <Left>lib/net7.0/ktsu.Abstractions.dll</Left>
+    <Right>lib/net8.0/ktsu.Abstractions.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0016</DiagnosticId>
+    <Target>M:ktsu.Abstractions.IObfuscationProvider.Obfuscate(System.ReadOnlySpan{System.Byte})-&gt;byte[]:[T:System.Runtime.CompilerServices.NullableAttribute]</Target>
+    <Left>lib/net7.0/ktsu.Abstractions.dll</Left>
+    <Right>lib/net8.0/ktsu.Abstractions.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0016</DiagnosticId>
+    <Target>M:ktsu.Abstractions.IObfuscationProvider.Obfuscate(System.ReadOnlySpan{System.Byte}):[T:System.Runtime.CompilerServices.NullableContextAttribute]</Target>
+    <Left>lib/net7.0/ktsu.Abstractions.dll</Left>
+    <Right>lib/net8.0/ktsu.Abstractions.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0016</DiagnosticId>
+    <Target>M:ktsu.Abstractions.IObfuscationProvider.ObfuscateAsync(System.ReadOnlyMemory{System.Byte},System.Threading.CancellationToken)-&gt;System.Threading.Tasks.Task&lt;byte[]&gt;:[T:System.Runtime.CompilerServices.NullableAttribute]</Target>
+    <Left>lib/net7.0/ktsu.Abstractions.dll</Left>
+    <Right>lib/net8.0/ktsu.Abstractions.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0016</DiagnosticId>
+    <Target>M:ktsu.Abstractions.IObfuscationProvider.ObfuscateAsync(System.ReadOnlyMemory{System.Byte},System.Threading.CancellationToken):[T:System.Runtime.CompilerServices.NullableContextAttribute]</Target>
+    <Left>lib/net7.0/ktsu.Abstractions.dll</Left>
+    <Right>lib/net8.0/ktsu.Abstractions.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0016</DiagnosticId>
+    <Target>M:ktsu.Abstractions.IObfuscationProvider.TryDeobfuscate(System.ReadOnlySpan{System.Byte},System.IO.Stream):[T:System.Runtime.CompilerServices.NullableContextAttribute]</Target>
+    <Left>lib/net7.0/ktsu.Abstractions.dll</Left>
+    <Right>lib/net8.0/ktsu.Abstractions.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0016</DiagnosticId>
+    <Target>M:ktsu.Abstractions.IObfuscationProvider.TryDeobfuscate(System.ReadOnlySpan{System.Byte},System.IO.Stream)$1:[T:System.Runtime.CompilerServices.NullableAttribute]</Target>
+    <Left>lib/net7.0/ktsu.Abstractions.dll</Left>
+    <Right>lib/net8.0/ktsu.Abstractions.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0016</DiagnosticId>
+    <Target>M:ktsu.Abstractions.IObfuscationProvider.TryDeobfuscate(System.ReadOnlySpan{System.Byte},System.Span{System.Byte}):[T:System.Runtime.CompilerServices.NullableContextAttribute]</Target>
+    <Left>lib/net7.0/ktsu.Abstractions.dll</Left>
+    <Right>lib/net8.0/ktsu.Abstractions.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0016</DiagnosticId>
+    <Target>M:ktsu.Abstractions.IObfuscationProvider.TryDeobfuscateAsync(System.ReadOnlyMemory{System.Byte},System.IO.Stream,System.Threading.CancellationToken)$0:[T:System.Runtime.CompilerServices.NullableAttribute]</Target>
+    <Left>lib/net7.0/ktsu.Abstractions.dll</Left>
+    <Right>lib/net8.0/ktsu.Abstractions.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0016</DiagnosticId>
+    <Target>M:ktsu.Abstractions.IObfuscationProvider.TryObfuscate(System.ReadOnlySpan{System.Byte},System.IO.Stream):[T:System.Runtime.CompilerServices.NullableContextAttribute]</Target>
+    <Left>lib/net7.0/ktsu.Abstractions.dll</Left>
+    <Right>lib/net8.0/ktsu.Abstractions.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0016</DiagnosticId>
+    <Target>M:ktsu.Abstractions.IObfuscationProvider.TryObfuscate(System.ReadOnlySpan{System.Byte},System.IO.Stream)$1:[T:System.Runtime.CompilerServices.NullableAttribute]</Target>
+    <Left>lib/net7.0/ktsu.Abstractions.dll</Left>
+    <Right>lib/net8.0/ktsu.Abstractions.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0016</DiagnosticId>
+    <Target>M:ktsu.Abstractions.IObfuscationProvider.TryObfuscate(System.ReadOnlySpan{System.Byte},System.Span{System.Byte}):[T:System.Runtime.CompilerServices.NullableContextAttribute]</Target>
+    <Left>lib/net7.0/ktsu.Abstractions.dll</Left>
+    <Right>lib/net8.0/ktsu.Abstractions.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0016</DiagnosticId>
+    <Target>M:ktsu.Abstractions.IObfuscationProvider.TryObfuscateAsync(System.ReadOnlyMemory{System.Byte},System.IO.Stream,System.Threading.CancellationToken)$0:[T:System.Runtime.CompilerServices.NullableAttribute]</Target>
+    <Left>lib/net7.0/ktsu.Abstractions.dll</Left>
+    <Right>lib/net8.0/ktsu.Abstractions.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0016</DiagnosticId>
+    <Target>M:ktsu.Abstractions.ISerializationProvider.Deserialize(System.IO.TextReader)-&gt;object?:[T:System.Runtime.CompilerServices.NullableAttribute]</Target>
+    <Left>lib/net7.0/ktsu.Abstractions.dll</Left>
+    <Right>lib/net8.0/ktsu.Abstractions.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0016</DiagnosticId>
+    <Target>M:ktsu.Abstractions.ISerializationProvider.Deserialize(System.ReadOnlySpan{System.Byte})-&gt;object?:[T:System.Runtime.CompilerServices.NullableAttribute]</Target>
+    <Left>lib/net7.0/ktsu.Abstractions.dll</Left>
+    <Right>lib/net8.0/ktsu.Abstractions.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0016</DiagnosticId>
+    <Target>M:ktsu.Abstractions.ISerializationProvider.Deserialize(System.ReadOnlySpan{System.Byte}):[T:System.Runtime.CompilerServices.NullableContextAttribute]</Target>
+    <Left>lib/net7.0/ktsu.Abstractions.dll</Left>
+    <Right>lib/net8.0/ktsu.Abstractions.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0016</DiagnosticId>
+    <Target>M:ktsu.Abstractions.ISerializationProvider.Deserialize``1(System.IO.TextReader):[T:System.Runtime.CompilerServices.NullableContextAttribute]</Target>
+    <Left>lib/net7.0/ktsu.Abstractions.dll</Left>
+    <Right>lib/net8.0/ktsu.Abstractions.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0016</DiagnosticId>
+    <Target>M:ktsu.Abstractions.ISerializationProvider.Deserialize``1(System.IO.TextReader)$0:[T:System.Runtime.CompilerServices.NullableAttribute]</Target>
+    <Left>lib/net7.0/ktsu.Abstractions.dll</Left>
+    <Right>lib/net8.0/ktsu.Abstractions.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0016</DiagnosticId>
+    <Target>M:ktsu.Abstractions.ISerializationProvider.Deserialize``1(System.ReadOnlySpan{System.Byte}):[T:System.Runtime.CompilerServices.NullableContextAttribute]</Target>
+    <Left>lib/net7.0/ktsu.Abstractions.dll</Left>
+    <Right>lib/net8.0/ktsu.Abstractions.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0016</DiagnosticId>
+    <Target>M:ktsu.Abstractions.ISerializationProvider.Deserialize``1(System.ReadOnlySpan{System.Byte})$0:[T:System.Runtime.CompilerServices.NullableAttribute]</Target>
+    <Left>lib/net7.0/ktsu.Abstractions.dll</Left>
+    <Right>lib/net8.0/ktsu.Abstractions.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0016</DiagnosticId>
+    <Target>M:ktsu.Abstractions.ISerializationProvider.DeserializeAsync(System.ReadOnlyMemory{System.Byte},System.Threading.CancellationToken)-&gt;System.Threading.Tasks.Task&lt;object?&gt;:[T:System.Runtime.CompilerServices.NullableAttribute]</Target>
+    <Left>lib/net7.0/ktsu.Abstractions.dll</Left>
+    <Right>lib/net8.0/ktsu.Abstractions.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0016</DiagnosticId>
+    <Target>M:ktsu.Abstractions.ISerializationProvider.DeserializeAsync(System.ReadOnlyMemory{System.Byte},System.Threading.CancellationToken):[T:System.Runtime.CompilerServices.NullableContextAttribute]</Target>
+    <Left>lib/net7.0/ktsu.Abstractions.dll</Left>
+    <Right>lib/net8.0/ktsu.Abstractions.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0016</DiagnosticId>
+    <Target>M:ktsu.Abstractions.ISerializationProvider.DeserializeAsync``1(System.IO.TextReader,System.Threading.CancellationToken)-&gt;System.Threading.Tasks.Task&lt;T?&gt;:[T:System.Runtime.CompilerServices.NullableAttribute]</Target>
+    <Left>lib/net7.0/ktsu.Abstractions.dll</Left>
+    <Right>lib/net8.0/ktsu.Abstractions.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0016</DiagnosticId>
+    <Target>M:ktsu.Abstractions.ISerializationProvider.DeserializeAsync``1(System.IO.TextReader,System.Threading.CancellationToken)&lt;0&gt;:[T:System.Runtime.CompilerServices.NullableAttribute]</Target>
+    <Left>lib/net7.0/ktsu.Abstractions.dll</Left>
+    <Right>lib/net8.0/ktsu.Abstractions.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0016</DiagnosticId>
+    <Target>M:ktsu.Abstractions.ISerializationProvider.DeserializeAsync``1(System.ReadOnlyMemory{System.Byte},System.Threading.CancellationToken)-&gt;System.Threading.Tasks.Task&lt;T?&gt;:[T:System.Runtime.CompilerServices.NullableAttribute]</Target>
+    <Left>lib/net7.0/ktsu.Abstractions.dll</Left>
+    <Right>lib/net8.0/ktsu.Abstractions.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0016</DiagnosticId>
+    <Target>M:ktsu.Abstractions.ISerializationProvider.DeserializeAsync``1(System.ReadOnlyMemory{System.Byte},System.Threading.CancellationToken):[T:System.Runtime.CompilerServices.NullableContextAttribute]</Target>
+    <Left>lib/net7.0/ktsu.Abstractions.dll</Left>
+    <Right>lib/net8.0/ktsu.Abstractions.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0016</DiagnosticId>
+    <Target>M:ktsu.Abstractions.ISerializationProvider.DeserializeAsync``1(System.ReadOnlyMemory{System.Byte},System.Threading.CancellationToken)&lt;0&gt;:[T:System.Runtime.CompilerServices.NullableAttribute]</Target>
     <Left>lib/net7.0/ktsu.Abstractions.dll</Left>
     <Right>lib/net8.0/ktsu.Abstractions.dll</Right>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0016</DiagnosticId>
     <Target>T:ktsu.Abstractions.ICompressionProvider:[T:System.Runtime.CompilerServices.NullableContextAttribute]</Target>
-    <Left>lib/net7.0/ktsu.Abstractions.dll</Left>
-    <Right>lib/net8.0/ktsu.Abstractions.dll</Right>
-  </Suppression>
-  <Suppression>
-    <DiagnosticId>CP0016</DiagnosticId>
-    <Target>T:ktsu.Abstractions.IEncryptionProvider:[T:System.Runtime.CompilerServices.NullableContextAttribute]</Target>
-    <Left>lib/net7.0/ktsu.Abstractions.dll</Left>
-    <Right>lib/net8.0/ktsu.Abstractions.dll</Right>
-  </Suppression>
-  <Suppression>
-    <DiagnosticId>CP0016</DiagnosticId>
-    <Target>T:ktsu.Abstractions.IHashProvider:[T:System.Runtime.CompilerServices.NullableContextAttribute]</Target>
     <Left>lib/net7.0/ktsu.Abstractions.dll</Left>
     <Right>lib/net8.0/ktsu.Abstractions.dll</Right>
   </Suppression>
