@@ -1,7 +1,7 @@
 ---
 status: draft
 title: ktsu.Abstractions
-description: A library providing a consistent set of interfaces for compression, encryption, hashing, obfuscation, serialization, and filesystem access.
+description: A library providing a comprehensive set of interfaces for compression, encryption, hashing, obfuscation, serialization, and filesystem access with zero-allocation Try* methods and convenient default implementations.
 tags:
   - abstractions
   - .net
@@ -13,20 +13,22 @@ tags:
   - encryption
   - hashing
   - obfuscation
+  - zero-allocation
+  - spans
 ---
 
 # ktsu.Abstractions
 
-A small, focused library of interfaces that define a consistent API for common cross-cutting concerns:
+A comprehensive library of interfaces that define a consistent, high-performance API for common cross-cutting concerns:
 
-- **Compression**: `ICompressionProvider`
-- **Encryption**: `IEncryptionProvider`
-- **Hashing**: `IHashProvider`
-- **Obfuscation**: `IObfuscationProvider`
-- **Serialization**: `ISerializationProvider`
-- **Filesystem**: `IFileSystemProvider`
+- **Compression**: `ICompressionProvider` - compress/decompress data with Span<byte> and Stream support
+- **Encryption**: `IEncryptionProvider` - encrypt/decrypt data with key and IV management
+- **Hashing**: `IHashProvider` - hash data with configurable output length
+- **Obfuscation**: `IObfuscationProvider` - reversible obfuscation/deobfuscation
+- **Serialization**: `ISerializationProvider` - serialize/deserialize objects with TextReader/TextWriter support
+- **Filesystem**: `IFileSystemProvider` - file system operations abstraction
 
-Designed for framework-agnostic usage and easy dependency injection.
+Each interface supports both zero-allocation Try* and Stream based methods and convenient self-allocating methods, with comprehensive async support.
 
 ## Target frameworks
 
@@ -84,11 +86,18 @@ IHashProvider hashProvider = provider.GetRequiredService<IHashProvider>();
 
 ```
 
-## Implementing your own providers
+## API Design Pattern
 
-Implement the interfaces in your application or infrastructure layer and register them with your DI container.
+All interfaces follow a consistent pattern:
 
-For example, if you want to implement a custom MD5 hash provider, you can do the following:
+1. **Core methods**: Zero-allocation `Try*` methods that work with `Span<byte>` and `Stream` parameters
+2. **Convenience methods**: Allocating methods that call the Try* methods and handle buffer management
+3. **Async support**: `Task`-based async versions of all operations with `CancellationToken` support
+4. **String overloads**: UTF8-encoded string variants for convenience
+
+### Example Implementation
+
+Here's how to implement a custom MD5 hash provider:
 
 ```csharp
 using System.Security.Cryptography;
@@ -98,23 +107,41 @@ public sealed class MyMD5HashProvider : IHashProvider
 {
     public int HashLengthBytes => 16; // MD5 produces 128-bit (16-byte) hashes
 
-    public (bool Success, int BytesWritten) TryHash(ReadOnlySpan<byte> data, Span<byte> destination)
+    // Zero-allocation implementation
+    public bool TryHash(ReadOnlySpan<byte> data, Span<byte> destination)
     {
         if (destination.Length < HashLengthBytes)
         {
-            return (false, HashLengthBytes);
+            return false;
         }
 
         using var md5 = MD5.Create();
         byte[] hashBytes = md5.ComputeHash(data.ToArray());
-        hashBytes.CopyTo(destination);
+        hashBytes.AsSpan().CopyTo(destination);
         
-        return (true, HashLengthBytes);
+        return true;
+    }
+
+    // Stream implementation
+    public bool TryHash(Stream data, Span<byte> destination)
+    {
+        if (destination.Length < HashLengthBytes)
+        {
+            return false;
+        }
+
+        using var md5 = MD5.Create();
+        byte[] hashBytes = md5.ComputeHash(data);
+        hashBytes.AsSpan().CopyTo(destination);
+        
+        return true;
     }
     
-    // Note: Async methods and Hash() convenience method are inherited via default interface implementations.
+    // All other methods (Hash(), HashAsync(), etc.) are provided by default implementations
 }
 ```
+
+### Usage Example
 
 ```csharp
 using System.Text;
@@ -127,23 +154,30 @@ services.AddTransient<IHashProvider, MyMD5HashProvider>();
 using IServiceProvider provider = services.BuildServiceProvider();
 IHashProvider hashProvider = provider.GetRequiredService<IHashProvider>();
 
-// Using the convenience method (allocates)
+// Using the convenience method (allocates and manages buffer)
 byte[] inputData = Encoding.UTF8.GetBytes("Hello, World!");
 byte[] hash = hashProvider.Hash(inputData);
 
+// Using string convenience method
+string textHash = Convert.ToHexString(hashProvider.Hash("Hello, World!"));
+
 // Using the zero-allocation Try method
-Span<byte> hashBuffer = new byte[hashProvider.HashLengthBytes];
-(bool success, int bytesWritten) = hashProvider.TryHash(inputData, hashBuffer);
-if (success)
+Span<byte> hashBuffer = stackalloc byte[hashProvider.HashLengthBytes];
+if (hashProvider.TryHash(inputData, hashBuffer))
 {
-    ReadOnlySpan<byte> computedHash = hashBuffer[..bytesWritten];
-    // Use computedHash...
+    string result = Convert.ToHexString(hashBuffer);
 }
+
+// Async usage
+byte[] asyncHash = await hashProvider.HashAsync(inputData);
 ```
 ## Design principles
 
-- Canonical APIs are allocation-free Try methods that write to caller-provided destinations and return `(Success, BytesWritten)`.
-- Convenience methods allocate a buffer based on the estimated size of the data, call Try*, retry if needed, and trim to `BytesWritten`.
+- **Core methods support zero-allocation and streaming implementations**: The fundamental operations use `Try*` methods that work with caller-provided `Span<byte>` or `Stream` destinations, returning boolean success indicators.
+- **Default implementations provide convenience**: Interfaces include default implementations for allocating methods (`Hash()`, `Compress()`, etc.) that handle buffer management and forward to the Try* methods.
+- **Comprehensive async support**: All operations have async variants with proper `CancellationToken` support.
+- **String convenience methods**: UTF8-encoded string overloads are provided where appropriate for developer convenience.
+- **Minimal implementation burden**: Implementers only need to provide the core Try* methods; all other functionality is inherited through default interface implementations.
 
 ## Security notes
 

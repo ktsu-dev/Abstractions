@@ -4,6 +4,7 @@
 
 namespace ktsu.Abstractions;
 
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -25,108 +26,321 @@ public interface IEncryptionProvider
 	public byte[] GenerateIV();
 
 	/// <summary>
-	/// Tries to encrypt data into the destination buffer without allocating.
+	/// Tries to encrypt the data from the span and write the result to the destination.
 	/// </summary>
 	/// <param name="data">The data to encrypt.</param>
-	/// <param name="key">The encryption key.</param>
-	/// <param name="iv">The initialization vector.</param>
-	/// <param name="destination">The destination buffer to write the encrypted data to.</param>
-	/// <returns>The result of the encryption operation. Success=false with BytesWritten set to required size when destination is too small.</returns>
-	public (bool Success, int BytesWritten) TryEncrypt(ReadOnlySpan<byte> data, ReadOnlySpan<byte> key, ReadOnlySpan<byte> iv, Span<byte> destination);
+	/// <param name="key">The key to use for encryption.</param>
+	/// <param name="iv">The initialization vector to use for encryption.</param>
+	/// <param name="destination">The destination to write the encrypted data to.</param>
+	/// <returns>True if the encryption was successful, false otherwise.</returns>
+	public bool TryEncrypt(ReadOnlySpan<byte> data, ReadOnlySpan<byte> key, ReadOnlySpan<byte> iv, Span<byte> destination);
 
 	/// <summary>
-	/// Tries to decrypt data into the destination buffer without allocating.
-	/// </summary>
-	/// <param name="encryptedData">The encrypted data to decrypt.</param>
-	/// <param name="key">The encryption key.</param>
-	/// <param name="iv">The initialization vector.</param>
-	/// <param name="destination">The destination buffer to write the decrypted data to.</param>
-	/// <returns>The result of the decryption operation. Success=false with BytesWritten set to required size when destination is too small.</returns>
-	public (bool Success, int BytesWritten) TryDecrypt(ReadOnlySpan<byte> encryptedData, ReadOnlySpan<byte> key, ReadOnlySpan<byte> iv, Span<byte> destination);
-
-	/// <summary>
-	/// Tries to encrypt data asynchronously into the destination buffer.
+	/// Tries to encrypt the data from the stream and write the result to the destination.
 	/// </summary>
 	/// <param name="data">The data to encrypt.</param>
-	/// <param name="key">The encryption key.</param>
-	/// <param name="iv">The initialization vector.</param>
-	/// <param name="destination">The destination buffer to write the encrypted data to.</param>
+	/// <param name="key">The key to use for encryption.</param>
+	/// <param name="iv">The initialization vector to use for encryption.</param>
+	/// <param name="destination">The destination to write the encrypted data to.</param>
+	/// <returns>True if the encryption was successful, false otherwise.</returns>
+	public bool TryEncrypt(Stream data, ReadOnlySpan<byte> key, ReadOnlySpan<byte> iv, Stream destination);
+
+	/// <summary>
+	/// Tries to encrypt the data from the span and write the result to the destination.
+	/// </summary>
+	/// <param name="data">The data to encrypt.</param>
+	/// <param name="key">The key to use for encryption.</param>
+	/// <param name="iv">The initialization vector to use for encryption.</param>
+	/// <param name="destination">The destination to write the encrypted data to.</param>
+	/// <returns>True if the encryption was successful, false otherwise.</returns>
+	public bool TryEncrypt(ReadOnlySpan<byte> data, ReadOnlySpan<byte> key, ReadOnlySpan<byte> iv, Stream destination)
+	{
+		using MemoryStream inputStream = new(data.ToArray());
+		return TryEncrypt(inputStream, key, iv, destination);
+	}
+
+	/// <summary>
+	/// Tries to encrypt the data from the span and write the result to the destination asynchronously.
+	/// </summary>
+	/// <param name="data">The data to encrypt.</param>
+	/// <param name="key">The key to use for encryption.</param>
+	/// <param name="iv">The initialization vector to use for encryption.</param>
+	/// <param name="destination">The destination to write the encrypted data to.</param>
 	/// <param name="cancellationToken">The cancellation token.</param>
-	/// <returns>The result of the encryption operation. Success=false with BytesWritten set to required size when destination is too small.</returns>
-	public Task<(bool Success, int BytesWritten)> TryEncryptAsync(ReadOnlyMemory<byte> data, ReadOnlyMemory<byte> key, ReadOnlyMemory<byte> iv, Memory<byte> destination, CancellationToken cancellationToken = default)
+	/// <returns>True if the encryption was successful, false otherwise.</returns>
+	public Task<bool> TryEncryptAsync(ReadOnlyMemory<byte> data, ReadOnlyMemory<byte> key, ReadOnlyMemory<byte> iv, Memory<byte> destination, CancellationToken cancellationToken = default)
 		=> cancellationToken.IsCancellationRequested
-			? Task.FromCanceled<(bool Success, int BytesWritten)>(cancellationToken)
+			? Task.FromCanceled<bool>(cancellationToken)
 			: Task.Run(() => TryEncrypt(data.Span, key.Span, iv.Span, destination.Span), cancellationToken);
 
 	/// <summary>
-	/// Tries to decrypt data asynchronously into the destination buffer.
-	/// </summary>
-	/// <param name="encryptedData">The encrypted data to decrypt.</param>
-	/// <param name="key">The encryption key.</param>
-	/// <param name="iv">The initialization vector.</param>
-	/// <param name="destination">The destination buffer to write the decrypted data to.</param>
-	/// <param name="cancellationToken">The cancellation token.</param>
-	/// <returns>The result of the decryption operation. Success=false with BytesWritten set to required size when destination is too small.</returns>
-	public Task<(bool Success, int BytesWritten)> TryDecryptAsync(ReadOnlyMemory<byte> encryptedData, ReadOnlyMemory<byte> key, ReadOnlyMemory<byte> iv, Memory<byte> destination, CancellationToken cancellationToken = default)
-		=> cancellationToken.IsCancellationRequested
-			? Task.FromCanceled<(bool Success, int BytesWritten)>(cancellationToken)
-			: Task.Run(() => TryDecrypt(encryptedData.Span, key.Span, iv.Span, destination.Span), cancellationToken);
-
-	/// <summary>
-	/// Encrypts the specified data.
+	/// Tries to encrypt the data from the stream and write the result to the destination asynchronously.
 	/// </summary>
 	/// <param name="data">The data to encrypt.</param>
-	/// <param name="key">The encryption key.</param>
-	/// <param name="iv">The initialization vector.</param>
-	/// <returns>A byte array containing the encrypted data.</returns>
+	/// <param name="key">The key to use for encryption.</param>
+	/// <param name="iv">The initialization vector to use for encryption.</param>
+	/// <param name="destination">The destination to write the encrypted data to.</param>
+	/// <param name="cancellationToken">The cancellation token.</param>
+	/// <returns>True if the encryption was successful, false otherwise.</returns>
+	public Task<bool> TryEncryptAsync(Stream data, ReadOnlyMemory<byte> key, ReadOnlyMemory<byte> iv, Stream destination, CancellationToken cancellationToken = default)
+		=> cancellationToken.IsCancellationRequested
+			? Task.FromCanceled<bool>(cancellationToken)
+			: Task.Run(() => TryEncrypt(data, key.Span, iv.Span, destination), cancellationToken);
+
+	/// <summary>
+	/// Tries to encrypt the data from the span and write the result to the destination asynchronously.
+	/// </summary>
+	/// <param name="data">The data to encrypt.</param>
+	/// <param name="key">The key to use for encryption.</param>
+	/// <param name="iv">The initialization vector to use for encryption.</param>
+	/// <param name="destination">The destination to write the encrypted data to.</param>
+	/// <param name="cancellationToken">The cancellation token.</param>
+	/// <returns>True if the encryption was successful, false otherwise.</returns>
+	public Task<bool> TryEncryptAsync(ReadOnlyMemory<byte> data, ReadOnlyMemory<byte> key, ReadOnlyMemory<byte> iv, Stream destination, CancellationToken cancellationToken = default)
+		=> cancellationToken.IsCancellationRequested
+			? Task.FromCanceled<bool>(cancellationToken)
+			: Task.Run(() => TryEncrypt(data.Span, key.Span, iv.Span, destination), cancellationToken);
+
+	/// <summary>
+	/// Encrypts the data from the span and returns the result.
+	/// </summary>
+	/// <param name="data">The data to encrypt.</param>
+	/// <param name="key">The key to use for encryption.</param>
+	/// <param name="iv">The initialization vector to use for encryption.</param>
 	public byte[] Encrypt(ReadOnlySpan<byte> data, ReadOnlySpan<byte> key, ReadOnlySpan<byte> iv)
 	{
-		long estimatedSize = data.Length * 2;
-		Span<byte> destination = new byte[estimatedSize];
-		(bool success, int bytesWritten) = TryEncrypt(data, key, iv, destination);
-		if (!success)
+		using MemoryStream outputStream = new();
+		if (!TryEncrypt(data, key, iv, outputStream))
 		{
-			if (bytesWritten <= 0)
-			{
-				throw new InvalidOperationException("Encryption failed to produce output with the allocated buffer.");
-			}
-			destination = new byte[bytesWritten];
-			(success, bytesWritten) = TryEncrypt(data, key, iv, destination);
-			if (!success)
-			{
-				throw new InvalidOperationException("Encryption failed to produce output with the allocated buffer.");
-			}
+			throw new InvalidOperationException("Encryption failed to produce output with the allocated buffer.");
 		}
 
-		return destination[..bytesWritten].ToArray();
+		return outputStream.ToArray();
 	}
 
 	/// <summary>
-	/// Decrypts the specified encrypted data.
+	/// Encrypts the data from the stream and returns the result.
 	/// </summary>
-	/// <param name="encryptedData">The encrypted data to decrypt.</param>
-	/// <param name="key">The encryption key.</param>
-	/// <param name="iv">The initialization vector.</param>
-	/// <returns>A byte array containing the decrypted data.</returns>
-	public byte[] Decrypt(ReadOnlySpan<byte> encryptedData, ReadOnlySpan<byte> key, ReadOnlySpan<byte> iv)
+	/// <param name="data">The data to encrypt.</param>
+	/// <param name="key">The key to use for encryption.</param>
+	/// <param name="iv">The initialization vector to use for encryption.</param>
+	public byte[] Encrypt(Stream data, ReadOnlySpan<byte> key, ReadOnlySpan<byte> iv)
 	{
-		long estimatedSize = encryptedData.Length * 2;
-		Span<byte> destination = new byte[estimatedSize];
-		(bool success, int bytesWritten) = TryDecrypt(encryptedData, key, iv, destination);
-		if (!success)
+		using MemoryStream outputStream = new();
+		if (!TryEncrypt(data, key, iv, outputStream))
 		{
-			if (bytesWritten <= 0)
-			{
-				throw new InvalidOperationException("Decryption failed to produce output with the allocated buffer.");
-			}
-			destination = new byte[bytesWritten];
-			(success, bytesWritten) = TryDecrypt(encryptedData, key, iv, destination);
-			if (!success)
-			{
-				throw new InvalidOperationException("Decryption failed to produce output with the allocated buffer.");
-			}
+			throw new InvalidOperationException("Encryption failed to produce output with the allocated buffer.");
 		}
 
-		return destination[..bytesWritten].ToArray();
+		return outputStream.ToArray();
 	}
+
+	/// <summary>
+	/// Encrypts the data from the string and returns the result.
+	/// </summary>
+	/// <param name="data">The data to encrypt.</param>
+	/// <param name="key">The key to use for encryption.</param>
+	/// <param name="iv">The initialization vector to use for encryption.</param>
+	public string Encrypt(string data, ReadOnlySpan<byte> key, ReadOnlySpan<byte> iv)
+	{
+		byte[] bytes = Encoding.UTF8.GetBytes(data);
+		return Encoding.UTF8.GetString(Encrypt(bytes, key, iv));
+	}
+
+	/// <summary>
+	/// Encrypts the data from the span and returns the result asynchronously.
+	/// </summary>
+	/// <param name="data">The data to encrypt.</param>
+	/// <param name="key">The key to use for encryption.</param>
+	/// <param name="iv">The initialization vector to use for encryption.</param>
+	/// <param name="cancellationToken">The cancellation token.</param>
+	/// <returns>The encrypted data.</returns>
+	public Task<byte[]> EncryptAsync(ReadOnlyMemory<byte> data, ReadOnlyMemory<byte> key, ReadOnlyMemory<byte> iv, CancellationToken cancellationToken = default)
+		=> cancellationToken.IsCancellationRequested
+			? Task.FromCanceled<byte[]>(cancellationToken)
+			: Task.Run(() => Encrypt(data.Span, key.Span, iv.Span), cancellationToken);
+
+	/// <summary>
+	/// Encrypts the data from the stream and returns the result asynchronously.
+	/// </summary>
+	/// <param name="data">The data to encrypt.</param>
+	/// <param name="key">The key to use for encryption.</param>
+	/// <param name="iv">The initialization vector to use for encryption.</param>
+	/// <param name="cancellationToken">The cancellation token.</param>
+	/// <returns>The encrypted data.</returns>
+	public Task<byte[]> EncryptAsync(Stream data, ReadOnlyMemory<byte> key, ReadOnlyMemory<byte> iv, CancellationToken cancellationToken = default)
+		=> cancellationToken.IsCancellationRequested
+			? Task.FromCanceled<byte[]>(cancellationToken)
+			: Task.Run(() => Encrypt(data, key.Span, iv.Span), cancellationToken);
+
+	/// <summary>
+	/// Encrypts the data from the string and returns the result asynchronously.
+	/// </summary>
+	/// <param name="data">The data to encrypt.</param>
+	/// <param name="key">The key to use for encryption.</param>
+	/// <param name="iv">The initialization vector to use for encryption.</param>
+	/// <param name="cancellationToken">The cancellation token.</param>
+	/// <returns>The encrypted data.</returns>
+	public Task<string> EncryptAsync(string data, ReadOnlyMemory<byte> key, ReadOnlyMemory<byte> iv, CancellationToken cancellationToken = default)
+		=> cancellationToken.IsCancellationRequested
+			? Task.FromCanceled<string>(cancellationToken)
+			: Task.Run(() => Encrypt(data, key.Span, iv.Span), cancellationToken);
+
+	/// <summary>
+	/// Tries to decrypt the data from the span and write the result to the destination.
+	/// </summary>
+	/// <param name="data">The data to decrypt.</param>
+	/// <param name="key">The key to use for decryption.</param>
+	/// <param name="iv">The initialization vector to use for decryption.</param>
+	/// <param name="destination">The destination to write the decrypted data to.</param>
+	public bool TryDecrypt(ReadOnlySpan<byte> data, ReadOnlySpan<byte> key, ReadOnlySpan<byte> iv, Span<byte> destination);
+
+	/// <summary>
+	/// Tries to decrypt the data from the stream and write the result to the destination.
+	/// </summary>
+	/// <param name="data">The data to decrypt.</param>
+	/// <param name="key">The key to use for decryption.</param>
+	/// <param name="iv">The initialization vector to use for decryption.</param>
+	/// <param name="destination">The destination to write the decrypted data to.</param>
+	public bool TryDecrypt(Stream data, ReadOnlySpan<byte> key, ReadOnlySpan<byte> iv, Stream destination);
+
+	/// <summary>
+	/// Tries to decrypt the data from the span and write the result to the destination.
+	/// </summary>
+	/// <param name="data">The data to decrypt.</param>
+	/// <param name="key">The key to use for decryption.</param>
+	/// <param name="iv">The initialization vector to use for decryption.</param>
+	/// <param name="destination">The destination to write the decrypted data to.</param>
+	public bool TryDecrypt(ReadOnlySpan<byte> data, ReadOnlySpan<byte> key, ReadOnlySpan<byte> iv, Stream destination)
+	{
+		using MemoryStream inputStream = new(data.ToArray());
+		return TryDecrypt(inputStream, key, iv, destination);
+	}
+
+	/// <summary>
+	/// Tries to decrypt the data from the span and write the result to the destination asynchronously.
+	/// </summary>
+	/// <param name="data">The data to decrypt.</param>
+	/// <param name="key">The key to use for decryption.</param>
+	/// <param name="iv">The initialization vector to use for decryption.</param>
+	/// <param name="destination">The destination to write the decrypted data to.</param>
+	/// <param name="cancellationToken">The cancellation token.</param>
+	/// <returns>True if the decryption was successful, false otherwise.</returns>
+	public Task<bool> TryDecryptAsync(ReadOnlyMemory<byte> data, ReadOnlyMemory<byte> key, ReadOnlyMemory<byte> iv, Memory<byte> destination, CancellationToken cancellationToken = default)
+		=> cancellationToken.IsCancellationRequested
+			? Task.FromCanceled<bool>(cancellationToken)
+			: Task.Run(() => TryDecrypt(data.Span, key.Span, iv.Span, destination.Span), cancellationToken);
+
+	/// <summary>
+	/// Tries to decrypt the data from the stream and write the result to the destination asynchronously.
+	/// </summary>
+	/// <param name="data">The data to decrypt.</param>
+	/// <param name="key">The key to use for decryption.</param>
+	/// <param name="iv">The initialization vector to use for decryption.</param>
+	/// <param name="destination">The destination to write the decrypted data to.</param>
+	/// <param name="cancellationToken">The cancellation token.</param>
+	/// <returns>True if the decryption was successful, false otherwise.</returns>
+	public Task<bool> TryDecryptAsync(Stream data, ReadOnlyMemory<byte> key, ReadOnlyMemory<byte> iv, Stream destination, CancellationToken cancellationToken = default)
+		=> cancellationToken.IsCancellationRequested
+			? Task.FromCanceled<bool>(cancellationToken)
+			: Task.Run(() => TryDecrypt(data, key.Span, iv.Span, destination), cancellationToken);
+
+	/// <summary>
+	/// Tries to decrypt the data from the span and write the result to the destination asynchronously.
+	/// </summary>
+	/// <param name="data">The data to decrypt.</param>
+	/// <param name="key">The key to use for decryption.</param>
+	/// <param name="iv">The initialization vector to use for decryption.</param>
+	/// <param name="destination">The destination to write the decrypted data to.</param>
+	/// <param name="cancellationToken">The cancellation token.</param>
+	/// <returns>True if the decryption was successful, false otherwise.</returns>
+	public Task<bool> TryDecryptAsync(ReadOnlyMemory<byte> data, ReadOnlyMemory<byte> key, ReadOnlyMemory<byte> iv, Stream destination, CancellationToken cancellationToken = default)
+		=> cancellationToken.IsCancellationRequested
+			? Task.FromCanceled<bool>(cancellationToken)
+			: Task.Run(() => TryDecrypt(data.Span, key.Span, iv.Span, destination), cancellationToken);
+
+	/// <summary>
+	/// Decrypts the data from the span and returns the result.
+	/// </summary>
+	/// <param name="data">The data to decrypt.</param>
+	/// <param name="key">The key to use for decryption.</param>
+	/// <param name="iv">The initialization vector to use for decryption.</param>
+	public byte[] Decrypt(ReadOnlySpan<byte> data, ReadOnlySpan<byte> key, ReadOnlySpan<byte> iv)
+	{
+		using MemoryStream outputStream = new();
+		if (!TryDecrypt(data, key, iv, outputStream))
+		{
+			throw new InvalidOperationException("Decryption failed to produce output with the allocated buffer.");
+		}
+
+		return outputStream.ToArray();
+	}
+
+	/// <summary>
+	/// Decrypts the data from the stream and returns the result.
+	/// </summary>
+	/// <param name="data">The data to decrypt.</param>
+	/// <param name="key">The key to use for decryption.</param>
+	/// <param name="iv">The initialization vector to use for decryption.</param>
+	public byte[] Decrypt(Stream data, ReadOnlySpan<byte> key, ReadOnlySpan<byte> iv)
+	{
+		using MemoryStream outputStream = new();
+		if (!TryDecrypt(data, key, iv, outputStream))
+		{
+			throw new InvalidOperationException("Decryption failed to produce output with the allocated buffer.");
+		}
+
+		return outputStream.ToArray();
+	}
+
+	/// <summary>
+	/// Decrypts the data from the string and returns the result.
+	/// </summary>
+	/// <param name="data">The data to decrypt.</param>
+	/// <param name="key">The key to use for decryption.</param>
+	/// <param name="iv">The initialization vector to use for decryption.</param>
+	public string Decrypt(string data, ReadOnlySpan<byte> key, ReadOnlySpan<byte> iv)
+	{
+		byte[] bytes = Encoding.UTF8.GetBytes(data);
+		return Encoding.UTF8.GetString(Decrypt(bytes, key, iv));
+	}
+
+	/// <summary>
+	/// Decrypts the data from the span and returns the result asynchronously.
+	/// </summary>
+	/// <param name="data">The data to decrypt.</param>
+	/// <param name="key">The key to use for decryption.</param>
+	/// <param name="iv">The initialization vector to use for decryption.</param>
+	/// <param name="cancellationToken">The cancellation token.</param>
+	/// <returns>The decrypted data.</returns>
+	public Task<byte[]> DecryptAsync(ReadOnlyMemory<byte> data, ReadOnlyMemory<byte> key, ReadOnlyMemory<byte> iv, CancellationToken cancellationToken = default)
+		=> cancellationToken.IsCancellationRequested
+			? Task.FromCanceled<byte[]>(cancellationToken)
+			: Task.Run(() => Decrypt(data.Span, key.Span, iv.Span), cancellationToken);
+
+	/// <summary>
+	/// Decrypts the data from the stream and returns the result asynchronously.
+	/// </summary>
+	/// <param name="data">The data to decrypt.</param>
+	/// <param name="key">The key to use for decryption.</param>
+	/// <param name="iv">The initialization vector to use for decryption.</param>
+	/// <param name="cancellationToken">The cancellation token.</param>
+	/// <returns>The decrypted data.</returns>
+	public Task<byte[]> DecryptAsync(Stream data, ReadOnlyMemory<byte> key, ReadOnlyMemory<byte> iv, CancellationToken cancellationToken = default)
+		=> cancellationToken.IsCancellationRequested
+			? Task.FromCanceled<byte[]>(cancellationToken)
+			: Task.Run(() => Decrypt(data, key.Span, iv.Span), cancellationToken);
+
+	/// <summary>
+	/// Decrypts the data from the string and returns the result asynchronously.
+	/// </summary>
+	/// <param name="data">The data to decrypt.</param>
+	/// <param name="key">The key to use for decryption.</param>
+	/// <param name="iv">The initialization vector to use for decryption.</param>
+	/// <param name="cancellationToken">The cancellation token.</param>
+	/// <returns>The decrypted data.</returns>
+	public Task<string> DecryptAsync(string data, ReadOnlyMemory<byte> key, ReadOnlyMemory<byte> iv, CancellationToken cancellationToken = default)
+		=> cancellationToken.IsCancellationRequested
+			? Task.FromCanceled<string>(cancellationToken)
+			: Task.Run(() => Decrypt(data, key.Span, iv.Span), cancellationToken);
 }

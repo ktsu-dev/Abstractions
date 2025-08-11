@@ -1,1 +1,1 @@
-A library for providing a consistent API for various common operations such as compression, encryption, hashing, obfuscation, serialization, and more.
+A library providing a comprehensive set of interfaces for compression, encryption, hashing, obfuscation, serialization, and filesystem access with zero-allocation Try* methods and convenient default implementations.

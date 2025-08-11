@@ -5,6 +5,7 @@
 namespace ktsu.Abstractions;
 
 using System;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -23,8 +24,16 @@ public interface IHashProvider
 	/// </summary>
 	/// <param name="data">The data to hash.</param>
 	/// <param name="destination">The hash buffer to write the result to.</param>
-	/// <returns>The result of the hash operation. Success=false with BytesWritten set to required size when destination is too small.</returns>
-	public (bool Success, int BytesWritten) TryHash(ReadOnlySpan<byte> data, Span<byte> destination);
+	/// <returns>True if the hash operation was successful, false otherwise.</returns>
+	public bool TryHash(ReadOnlySpan<byte> data, Span<byte> destination);
+
+	/// <summary>
+	/// Tries to hash the specified data into the provided hash buffer.
+	/// </summary>
+	/// <param name="data">The data to hash.</param>
+	/// <param name="destination">The hash buffer to write the result to.</param>
+	/// <returns>True if the hash operation was successful, false otherwise.</returns>
+	public bool TryHash(Stream data, Span<byte> destination);
 
 	/// <summary>
 	/// Tries to hash the specified data into the provided hash buffer asynchronously.
@@ -32,13 +41,25 @@ public interface IHashProvider
 	/// <param name="data">The data to hash.</param>
 	/// <param name="destination">The hash buffer to write the result to.</param>
 	/// <param name="cancellationToken">The cancellation token.</param>
-	/// <returns>The result of the hash operation. Success=false with BytesWritten set to required size when destination is too small.</returns>
-	public Task<(bool Success, int BytesWritten)> TryHashAsync(ReadOnlyMemory<byte> data, Memory<byte> destination, CancellationToken cancellationToken = default)
+	/// <returns>True if the hash operation was successful, false otherwise.</returns>
+	public Task<bool> TryHashAsync(ReadOnlyMemory<byte> data, Memory<byte> destination, CancellationToken cancellationToken = default)
 	{
 		return cancellationToken.IsCancellationRequested
-			? Task.FromCanceled<(bool Success, int BytesWritten)>(cancellationToken)
+			? Task.FromCanceled<bool>(cancellationToken)
 			: Task.Run(() => TryHash(data.Span, destination.Span), cancellationToken);
 	}
+
+	/// <summary>
+	/// Tries to hash the specified data into the provided hash buffer asynchronously.
+	/// </summary>
+	/// <param name="data">The data to hash.</param>
+	/// <param name="destination">The hash buffer to write the result to.</param>
+	/// <param name="cancellationToken">The cancellation token.</param>
+	/// <returns>True if the hash operation was successful, false otherwise.</returns>
+	public Task<bool> TryHashAsync(Stream data, Memory<byte> destination, CancellationToken cancellationToken = default)
+		=> cancellationToken.IsCancellationRequested
+			? Task.FromCanceled<bool>(cancellationToken)
+			: Task.Run(() => TryHash(data, destination.Span), cancellationToken);
 
 	/// <summary>
 	/// Asynchronously hashes the specified data.
@@ -59,21 +80,38 @@ public interface IHashProvider
 	public byte[] Hash(ReadOnlySpan<byte> data)
 	{
 		Span<byte> hash = new byte[HashLengthBytes];
-		(bool success, int bytesWritten) = TryHash(data, hash);
-		if (!success)
+		if (!TryHash(data, hash))
 		{
-			if (bytesWritten <= 0)
-			{
-				throw new InvalidOperationException("Hashing failed to produce output with the allocated buffer.");
-			}
-			hash = new byte[bytesWritten];
-			(success, bytesWritten) = TryHash(data, hash);
-			if (!success)
-			{
-				throw new InvalidOperationException("Hashing failed to produce output with the allocated buffer.");
-			}
+			throw new InvalidOperationException("Hashing failed to produce output with the allocated buffer.");
 		}
 
-		return hash[..bytesWritten].ToArray();
+		return hash[..HashLengthBytes].ToArray();
+	}
+
+	/// <summary>
+	/// Hashes the specified data.
+	/// </summary>
+	/// <param name="data">The data to hash.</param>
+	/// <returns>A byte array containing the hash of the data.</returns>
+	public byte[] Hash(string data)
+	{
+		byte[] bytes = Encoding.UTF8.GetBytes(data);
+		return Hash(bytes);
+	}
+
+	/// <summary>
+	/// Hashes the specified data.
+	/// </summary>
+	/// <param name="data">The data to hash.</param>
+	/// <returns>A byte array containing the hash of the data.</returns>
+	public byte[] Hash(Stream data)
+	{
+		Span<byte> hash = new byte[HashLengthBytes];
+		if (!TryHash(data, hash))
+		{
+			throw new InvalidOperationException("Hashing failed to produce output with the allocated buffer.");
+		}
+
+		return hash[..HashLengthBytes].ToArray();
 	}
 }
