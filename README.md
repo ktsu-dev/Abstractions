@@ -32,7 +32,7 @@ Designed for framework-agnostic usage and easy dependency injection.
 
 This package multi-targets common frameworks for broad compatibility:
 
-- netstandard2.0, netstandard2.1
+- netstandard2.1
 - net5.0, net6.0, net7.0, net8.0, net9.0
 
 Supported OS: Windows, Linux, macOS.
@@ -88,34 +88,57 @@ IHashProvider hashProvider = provider.GetRequiredService<IHashProvider>();
 
 Implement the interfaces in your application or infrastructure layer and register them with your DI container.
 
-For example, if you want to implement a custom JSON serialization provider, you can do the following:
+For example, if you want to implement a custom MD5 hash provider, you can do the following:
 
 ```csharp
-using System.Text.Json;
+using System.Security.Cryptography;
 using ktsu.Abstractions;
 
-public sealed class MyJsonSerializationProvider : ISerializationProvider
+public sealed class MyMD5HashProvider : IHashProvider
 {
-    public string Serialize<T>(T obj) => JsonSerializer.Serialize(obj);
-    public string Serialize(object obj, Type type) => JsonSerializer.Serialize(obj, type);
-    public T Deserialize<T>(string data) => JsonSerializer.Deserialize<T>(data)!;
-    public object Deserialize(string data, Type type) => JsonSerializer.Deserialize(data, type)!;
-    // Note: Async methods are inherited via default interface implementations.
+    public int HashLengthBytes => 16; // MD5 produces 128-bit (16-byte) hashes
+
+    public (bool Success, int BytesWritten) TryHash(ReadOnlySpan<byte> data, Span<byte> destination)
+    {
+        if (destination.Length < HashLengthBytes)
+        {
+            return (false, HashLengthBytes);
+        }
+
+        using var md5 = MD5.Create();
+        byte[] hashBytes = md5.ComputeHash(data.ToArray());
+        hashBytes.CopyTo(destination);
+        
+        return (true, HashLengthBytes);
+    }
+    
+    // Note: Async methods and Hash() convenience method are inherited via default interface implementations.
 }
 ```
 
 ```csharp
+using System.Text;
 using ktsu.Abstractions;
 using Microsoft.Extensions.DependencyInjection;
 
 IServiceCollection services = new ServiceCollection();
-services.AddTransient<ISerializationProvider, MyJsonSerializationProvider>();
+services.AddTransient<IHashProvider, MyMD5HashProvider>();
 
 using IServiceProvider provider = services.BuildServiceProvider();
-ISerializationProvider serializer = provider.GetRequiredService<ISerializationProvider>();
+IHashProvider hashProvider = provider.GetRequiredService<IHashProvider>();
 
-string json = serializer.Serialize(new { Message = "Hello" });
-string jsonAsync = await serializer.SerializeAsync(new { Message = "Hello" });
+// Using the convenience method (allocates)
+byte[] inputData = Encoding.UTF8.GetBytes("Hello, World!");
+byte[] hash = hashProvider.Hash(inputData);
+
+// Using the zero-allocation Try method
+Span<byte> hashBuffer = new byte[hashProvider.HashLengthBytes];
+(bool success, int bytesWritten) = hashProvider.TryHash(inputData, hashBuffer);
+if (success)
+{
+    ReadOnlySpan<byte> computedHash = hashBuffer[..bytesWritten];
+    // Use computedHash...
+}
 ```
 ## Design principles
 
