@@ -24,19 +24,20 @@ public interface ISerializationProvider
 	public bool TrySerialize(object obj, TextWriter writer);
 
 	/// <summary>
-	/// Tries to deserialize the specified data into an object.
+	/// Tries to deserialize the specified data into a specific type.
 	/// </summary>
+	/// <typeparam name="T">The type to deserialize into.</typeparam>
 	/// <param name="data">The data to deserialize.</param>
 	/// <returns>The deserialized object.</returns>
-	public object? Deserialize(ReadOnlySpan<byte> data);
+	public T? Deserialize<T>(ReadOnlySpan<byte> data);
 
 	/// <summary>
-	/// Tries to deserialize the specified data into an object from a text reader.
+	/// Tries to deserialize the specified data into a specific type from a text reader.
 	/// </summary>
+	/// <typeparam name="T">The type to deserialize into.</typeparam>
 	/// <param name="reader">The reader to read the serialized data from.</param>
 	/// <returns>The deserialized object.</returns>
-	/// <remarks>The default implementation reads all of the data from the reader and passes it to the <see cref="Deserialize(ReadOnlySpan{byte})"/> method.</remarks>
-	public object? Deserialize(TextReader reader)
+	public T? Deserialize<T>(TextReader reader)
 	{
 		if (reader is null)
 		{
@@ -45,27 +46,8 @@ public interface ISerializationProvider
 
 		string data = reader.ReadToEnd();
 		byte[] bytes = Encoding.UTF8.GetBytes(data);
-		return Deserialize(bytes);
+		return Deserialize<T>(bytes);
 	}
-
-	/// <summary>
-	/// Tries to deserialize the specified data into a specific type.
-	/// </summary>
-	/// <typeparam name="T">The type to deserialize into.</typeparam>
-	/// <param name="data">The data to deserialize.</param>
-	/// <returns>The deserialized object.</returns>
-	public T? Deserialize<T>(ReadOnlySpan<byte> data)
-		=> (T?)Deserialize(data);
-
-	/// <summary>
-	/// Tries to deserialize the specified data into a specific type from a text reader.
-	/// </summary>
-	/// <typeparam name="T">The type to deserialize into.</typeparam>
-	/// <param name="reader">The reader to read the serialized data from.</param>
-	/// <returns>The deserialized object.</returns>
-	/// <remarks>The default implementation reads all of the data from the reader and passes it to the <see cref="Deserialize{T}(ReadOnlySpan{byte})"/> method.</remarks>
-	public T? Deserialize<T>(TextReader reader)
-		=> (T?)Deserialize(reader);
 
 	/// <summary>
 	/// Tries to serialize the specified object into the destination buffer asynchronously.
@@ -78,17 +60,6 @@ public interface ISerializationProvider
 		=> cancellationToken.IsCancellationRequested
 			? Task.FromCanceled<bool>(cancellationToken)
 			: Task.Run(() => TrySerialize(obj, writer), cancellationToken);
-
-	/// <summary>
-	/// Tries to deserialize the specified data into an object asynchronously.
-	/// </summary>
-	/// <param name="data">The data to deserialize.</param>
-	/// <param name="cancellationToken">The cancellation token.</param>
-	/// <returns>The deserialized object.</returns>
-	public Task<object?> DeserializeAsync(ReadOnlyMemory<byte> data, CancellationToken cancellationToken = default)
-		=> cancellationToken.IsCancellationRequested
-			? Task.FromCanceled<object?>(cancellationToken)
-			: Task.Run(() => Deserialize(data.Span), cancellationToken);
 
 	/// <summary>
 	/// Tries to deserialize the specified data into a specific type asynchronously.

@@ -507,24 +507,6 @@
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0016</DiagnosticId>
-    <Target>M:ktsu.Abstractions.ISerializationProvider.Deserialize(System.IO.TextReader)-&gt;object?:[T:System.Runtime.CompilerServices.NullableAttribute]</Target>
-    <Left>lib/net7.0/ktsu.Abstractions.dll</Left>
-    <Right>lib/net8.0/ktsu.Abstractions.dll</Right>
-  </Suppression>
-  <Suppression>
-    <DiagnosticId>CP0016</DiagnosticId>
-    <Target>M:ktsu.Abstractions.ISerializationProvider.Deserialize(System.ReadOnlySpan{System.Byte})-&gt;object?:[T:System.Runtime.CompilerServices.NullableAttribute]</Target>
-    <Left>lib/net7.0/ktsu.Abstractions.dll</Left>
-    <Right>lib/net8.0/ktsu.Abstractions.dll</Right>
-  </Suppression>
-  <Suppression>
-    <DiagnosticId>CP0016</DiagnosticId>
-    <Target>M:ktsu.Abstractions.ISerializationProvider.Deserialize(System.ReadOnlySpan{System.Byte}):[T:System.Runtime.CompilerServices.NullableContextAttribute]</Target>
-    <Left>lib/net7.0/ktsu.Abstractions.dll</Left>
-    <Right>lib/net8.0/ktsu.Abstractions.dll</Right>
-  </Suppression>
-  <Suppression>
-    <DiagnosticId>CP0016</DiagnosticId>
     <Target>M:ktsu.Abstractions.ISerializationProvider.Deserialize``1(System.IO.TextReader):[T:System.Runtime.CompilerServices.NullableContextAttribute]</Target>
     <Left>lib/net7.0/ktsu.Abstractions.dll</Left>
     <Right>lib/net8.0/ktsu.Abstractions.dll</Right>
@@ -544,18 +526,6 @@
   <Suppression>
     <DiagnosticId>CP0016</DiagnosticId>
     <Target>M:ktsu.Abstractions.ISerializationProvider.Deserialize``1(System.ReadOnlySpan{System.Byte})$0:[T:System.Runtime.CompilerServices.NullableAttribute]</Target>
-    <Left>lib/net7.0/ktsu.Abstractions.dll</Left>
-    <Right>lib/net8.0/ktsu.Abstractions.dll</Right>
-  </Suppression>
-  <Suppression>
-    <DiagnosticId>CP0016</DiagnosticId>
-    <Target>M:ktsu.Abstractions.ISerializationProvider.DeserializeAsync(System.ReadOnlyMemory{System.Byte},System.Threading.CancellationToken)-&gt;System.Threading.Tasks.Task&lt;object?&gt;:[T:System.Runtime.CompilerServices.NullableAttribute]</Target>
-    <Left>lib/net7.0/ktsu.Abstractions.dll</Left>
-    <Right>lib/net8.0/ktsu.Abstractions.dll</Right>
-  </Suppression>
-  <Suppression>
-    <DiagnosticId>CP0016</DiagnosticId>
-    <Target>M:ktsu.Abstractions.ISerializationProvider.DeserializeAsync(System.ReadOnlyMemory{System.Byte},System.Threading.CancellationToken):[T:System.Runtime.CompilerServices.NullableContextAttribute]</Target>
     <Left>lib/net7.0/ktsu.Abstractions.dll</Left>
     <Right>lib/net8.0/ktsu.Abstractions.dll</Right>
   </Suppression>
