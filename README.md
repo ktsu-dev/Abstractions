@@ -117,46 +117,10 @@ ISerializationProvider serializer = provider.GetRequiredService<ISerializationPr
 string json = serializer.Serialize(new { Message = "Hello" });
 string jsonAsync = await serializer.SerializeAsync(new { Message = "Hello" });
 ```
-
-## Interfaces overview
-
-- **`ICompressionProvider`**
-  - Sync (canonical): `byte[] Compress(ReadOnlySpan<byte> data, int level = 6)`, `byte[] Decompress(ReadOnlySpan<byte> data)`
-  - Convenience: `byte[] Compress(byte[] data, int level = 6)`, `byte[] Decompress(byte[] data)`
-  - Async (canonical): `Task<byte[]> CompressAsync(ReadOnlyMemory<byte> data, int level = 6, CancellationToken ct = default)`, `Task<byte[]> DecompressAsync(ReadOnlyMemory<byte> data, CancellationToken ct = default)`
-  - Async convenience: `Task<byte[]> CompressAsync(byte[] data, int level = 6, CancellationToken ct = default)`, `Task<byte[]> DecompressAsync(byte[] data, CancellationToken ct = default)`
-  - Streams: `Task<byte[]> CompressAsync(Stream data, int level = 6, CancellationToken ct = default)`, `Task<byte[]> DecompressAsync(Stream data, CancellationToken ct = default)`
-
-- **`IEncryptionProvider`**
-  - Sync (canonical): `byte[] Encrypt(ReadOnlySpan<byte> data, ReadOnlySpan<byte> key, ReadOnlySpan<byte> iv = default)`, `byte[] Decrypt(ReadOnlySpan<byte> data, ReadOnlySpan<byte> key, ReadOnlySpan<byte> iv = default)`
-  - Convenience: `byte[] Encrypt(byte[] data, byte[] key, byte[]? iv = null)`, `byte[] Decrypt(byte[] data, byte[] key, byte[]? iv = null)`
-  - Async (canonical): `Task<byte[]> EncryptAsync(ReadOnlyMemory<byte> data, ReadOnlyMemory<byte> key, ReadOnlyMemory<byte> iv = default, CancellationToken ct = default)`, `Task<byte[]> DecryptAsync(ReadOnlyMemory<byte> data, ReadOnlyMemory<byte> key, ReadOnlyMemory<byte> iv = default, CancellationToken ct = default)`
-  - Async convenience: `Task<byte[]> EncryptAsync(byte[] data, byte[] key, byte[]? iv = null, CancellationToken ct = default)`, `Task<byte[]> DecryptAsync(byte[] data, byte[] key, byte[]? iv = null, CancellationToken ct = default)`
-  - Key material: `byte[] GenerateKey()`, `byte[] GenerateIV()`
-
-- **`IHashProvider`**
-  - Sync (canonical): `byte[] Hash(ReadOnlySpan<byte> data)`
-  - Async (canonical): `Task<byte[]> HashAsync(ReadOnlyMemory<byte> data, CancellationToken ct = default)`, `Task<byte[]> HashAsync(Stream data, CancellationToken ct = default)`
-  - Convenience: `byte[] Hash(byte[] data)`, `Task<byte[]> HashAsync(byte[] data, CancellationToken ct = default)`
-
-- **`IObfuscationProvider`**
-  - Sync (canonical): `byte[] Obfuscate(ReadOnlySpan<byte> data, IReadOnlyDictionary<string, object?>? parameters = null)`, `byte[] Deobfuscate(ReadOnlySpan<byte> data, IReadOnlyDictionary<string, object?>? parameters = null)`
-  - Convenience: `byte[] Obfuscate(byte[] data, IReadOnlyDictionary<string, object?>? parameters = null)`, `byte[] Deobfuscate(byte[] data, IReadOnlyDictionary<string, object?>? parameters = null)`
-  - Async (canonical): `Task<byte[]> ObfuscateAsync(ReadOnlyMemory<byte> data, IReadOnlyDictionary<string, object?>? parameters = null, CancellationToken ct = default)`, `Task<byte[]> DeobfuscateAsync(ReadOnlyMemory<byte> data, IReadOnlyDictionary<string, object?>? parameters = null, CancellationToken ct = default)`
-  - Async convenience: `Task<byte[]> ObfuscateAsync(byte[] data, ...)`, `Task<byte[]> DeobfuscateAsync(byte[] data, ...)`
-
-- **`ISerializationProvider`**
-  - Sync: `string Serialize<T>(T obj)`, `string Serialize(object obj, Type type)`, `T Deserialize<T>(string data)`, `object Deserialize(string data, Type type)`
-  - Async: `Task<string> SerializeAsync<T>(T obj, CancellationToken ct = default)`, `Task<string> SerializeAsync(object obj, Type type, CancellationToken ct = default)`, `Task<T> DeserializeAsync<T>(string data, CancellationToken ct = default)`, `Task<object> DeserializeAsync(string data, Type type, CancellationToken ct = default)`
-
-- **`IFileSystemProvider`**
-  - Implements `System.IO.Abstractions.IFileSystem` for DI-friendly IO
-
 ## Design principles
 
-- Sync methods accept ReadOnlySpan<byte> for zero-allocation callers; async methods accept ReadOnlyMemory<byte> and, where appropriate, Stream.
-- Array-based overloads are provided as convenience wrappers and forward to span/memory.
-- Async wrappers for CPU-bound operations may run on the thread pool; stream-based methods are provided where I/O is involved.
+- Canonical APIs are allocation-free Try methods that write to caller-provided destinations and return `(Success, BytesWritten)`.
+- Convenience methods allocate a buffer based on the estimated size of the data, call Try*, retry if needed, and trim to `BytesWritten`.
 
 ## Security notes
 

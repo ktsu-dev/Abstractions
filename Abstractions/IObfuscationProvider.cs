@@ -5,7 +5,6 @@
 namespace ktsu.Abstractions;
 
 using System;
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -15,78 +14,94 @@ using System.Threading.Tasks;
 public interface IObfuscationProvider
 {
 	/// <summary>
-	/// Obfuscates the specified data (synchronous, canonical input type).
+	/// Tries to obfuscate data into the destination buffer without allocating.
 	/// </summary>
 	/// <param name="data">The data to obfuscate.</param>
-	/// <param name="parameters">Optional parameters controlling the obfuscation (e.g., shift, key).</param>
-	/// <returns>The obfuscated data.</returns>
-	public byte[] Obfuscate(ReadOnlySpan<byte> data, IReadOnlyDictionary<string, object?>? parameters = null);
+	/// <param name="destination">The destination buffer to write the obfuscated data to.</param>
+	/// <returns>The result of the obfuscation operation. Success=false with BytesWritten set to required size when destination is too small.</returns>
+	public (bool Success, int BytesWritten) TryObfuscate(ReadOnlySpan<byte> data, Span<byte> destination);
 
 	/// <summary>
-	/// Convenience overload that forwards to the canonical span-based method.
-	/// </summary>
-	/// <param name="data">The data to obfuscate.</param>
-	/// <param name="parameters">Optional parameters.</param>
-	/// <returns>The obfuscated data.</returns>
-	public byte[] Obfuscate(byte[] data, IReadOnlyDictionary<string, object?>? parameters = null) => Obfuscate(data.AsSpan(), parameters);
-
-	/// <summary>
-	/// Deobfuscates the specified data (where applicable; synchronous, canonical input type).
+	/// Tries to deobfuscate data into the destination buffer without allocating.
 	/// </summary>
 	/// <param name="obfuscatedData">The obfuscated data to deobfuscate.</param>
-	/// <param name="parameters">Optional parameters controlling the deobfuscation (e.g., shift, key).</param>
-	/// <returns>The deobfuscated data.</returns>
-	public byte[] Deobfuscate(ReadOnlySpan<byte> obfuscatedData, IReadOnlyDictionary<string, object?>? parameters = null);
+	/// <param name="destination">The destination buffer to write the deobfuscated data to.</param>
+	/// <returns>The result of the deobfuscation operation. Success=false with BytesWritten set to required size when destination is too small.</returns>
+	public (bool Success, int BytesWritten) TryDeobfuscate(ReadOnlySpan<byte> obfuscatedData, Span<byte> destination);
 
 	/// <summary>
-	/// Convenience overload that forwards to the canonical span-based method.
-	/// </summary>
-	/// <param name="obfuscatedData">The obfuscated data to deobfuscate.</param>
-	/// <param name="parameters">Optional parameters.</param>
-	/// <returns>The deobfuscated data.</returns>
-	public byte[] Deobfuscate(byte[] obfuscatedData, IReadOnlyDictionary<string, object?>? parameters = null) => Deobfuscate(obfuscatedData.AsSpan(), parameters);
-
-	/// <summary>
-	/// Asynchronously obfuscates the specified data (canonical async input type).
+	/// Asynchronously obfuscates the specified data
 	/// </summary>
 	/// <param name="data">The data to obfuscate.</param>
-	/// <param name="parameters">Optional parameters controlling the obfuscation (e.g., shift, key).</param>
 	/// <param name="cancellationToken">A cancellation token.</param>
-	/// <returns>A task that represents the asynchronous obfuscation operation.</returns>
-	public Task<byte[]> ObfuscateAsync(ReadOnlyMemory<byte> data, IReadOnlyDictionary<string, object?>? parameters = null, CancellationToken cancellationToken = default)
+	/// <returns>A byte array containing the obfuscated data.</returns>
+	public Task<byte[]> ObfuscateAsync(ReadOnlyMemory<byte> data, CancellationToken cancellationToken = default)
 		=> cancellationToken.IsCancellationRequested
 			? Task.FromCanceled<byte[]>(cancellationToken)
-			: Task.Run(() => Obfuscate(data.Span, parameters), cancellationToken);
+			: Task.Run(() => Obfuscate(data.Span), cancellationToken);
 
 	/// <summary>
-	/// Convenience overload that forwards to the canonical memory-based async method.
-	/// </summary>
-	/// <param name="data">The data to obfuscate.</param>
-	/// <param name="parameters">Optional parameters.</param>
-	/// <param name="cancellationToken">A cancellation token.</param>
-	/// <returns>A task that represents the asynchronous obfuscation operation.</returns>
-	public Task<byte[]> ObfuscateAsync(byte[] data, IReadOnlyDictionary<string, object?>? parameters = null, CancellationToken cancellationToken = default)
-		=> ObfuscateAsync(data.AsMemory(), parameters, cancellationToken);
-
-	/// <summary>
-	/// Asynchronously deobfuscates the specified data (canonical async input type).
+	/// Asynchronously deobfuscates the specified data.
 	/// </summary>
 	/// <param name="obfuscatedData">The obfuscated data to deobfuscate.</param>
-	/// <param name="parameters">Optional parameters controlling the deobfuscation (e.g., shift, key).</param>
 	/// <param name="cancellationToken">A cancellation token.</param>
-	/// <returns>A task that represents the asynchronous deobfuscation operation.</returns>
-	public Task<byte[]> DeobfuscateAsync(ReadOnlyMemory<byte> obfuscatedData, IReadOnlyDictionary<string, object?>? parameters = null, CancellationToken cancellationToken = default)
+	/// <returns>A byte array containing the deobfuscated data.</returns>
+	public Task<byte[]> DeobfuscateAsync(ReadOnlyMemory<byte> obfuscatedData, CancellationToken cancellationToken = default)
 		=> cancellationToken.IsCancellationRequested
 			? Task.FromCanceled<byte[]>(cancellationToken)
-			: Task.Run(() => Deobfuscate(obfuscatedData.Span, parameters), cancellationToken);
+			: Task.Run(() => Deobfuscate(obfuscatedData.Span), cancellationToken);
 
 	/// <summary>
-	/// Convenience overload that forwards to the canonical memory-based async method.
+	/// Obfuscates the specified data.
+	/// </summary>
+	/// <param name="data">The data to obfuscate.</param>
+	/// <returns>A byte array containing the obfuscated data.</returns>
+	public byte[] Obfuscate(ReadOnlySpan<byte> data)
+	{
+		long estimatedSize = data.Length * 2;
+		Span<byte> destination = new byte[estimatedSize];
+		(bool success, int bytesWritten) = TryObfuscate(data, destination);
+		if (!success)
+		{
+			if (bytesWritten <= 0)
+			{
+				throw new InvalidOperationException("Obfuscation failed to produce output with the allocated buffer.");
+			}
+			destination = new byte[bytesWritten];
+			(success, bytesWritten) = TryObfuscate(data, destination);
+			if (!success)
+			{
+				throw new InvalidOperationException("Obfuscation failed to produce output with the allocated buffer.");
+			}
+		}
+
+		return destination[..bytesWritten].ToArray();
+	}
+
+	/// <summary>
+	/// Deobfuscates the specified obfuscated data.
 	/// </summary>
 	/// <param name="obfuscatedData">The obfuscated data to deobfuscate.</param>
-	/// <param name="parameters">Optional parameters.</param>
-	/// <param name="cancellationToken">A cancellation token.</param>
-	/// <returns>A task that represents the asynchronous deobfuscation operation.</returns>
-	public Task<byte[]> DeobfuscateAsync(byte[] obfuscatedData, IReadOnlyDictionary<string, object?>? parameters = null, CancellationToken cancellationToken = default)
-		=> DeobfuscateAsync(obfuscatedData.AsMemory(), parameters, cancellationToken);
+	/// <returns>A byte array containing the deobfuscated data.</returns>
+	public byte[] Deobfuscate(ReadOnlySpan<byte> obfuscatedData)
+	{
+		long estimatedSize = obfuscatedData.Length * 2;
+		Span<byte> destination = new byte[estimatedSize];
+		(bool success, int bytesWritten) = TryDeobfuscate(obfuscatedData, destination);
+		if (!success)
+		{
+			if (bytesWritten <= 0)
+			{
+				throw new InvalidOperationException("Deobfuscation failed to produce output with the allocated buffer.");
+			}
+			destination = new byte[bytesWritten];
+			(success, bytesWritten) = TryDeobfuscate(obfuscatedData, destination);
+			if (!success)
+			{
+				throw new InvalidOperationException("Deobfuscation failed to produce output with the allocated buffer.");
+			}
+		}
+
+		return destination[..bytesWritten].ToArray();
+	}
 }

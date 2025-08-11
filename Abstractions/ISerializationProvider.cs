@@ -5,7 +5,6 @@
 namespace ktsu.Abstractions;
 
 using System;
-using System.IO;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -16,82 +15,88 @@ using System.Threading.Tasks;
 public interface ISerializationProvider
 {
 	/// <summary>
-	/// Serializes an object to its string representation.
-	/// </summary>
-	/// <typeparam name="T">The type of object to serialize.</typeparam>
-	/// <param name="obj">The object to serialize.</param>
-	/// <returns>The serialized string representation of the object.</returns>
-	public string Serialize<T>(T obj);
-
-	/// <summary>
-	/// Serializes an object to its string representation using the specified type.
+	/// Tries to serialize the specified object into the destination buffer without allocating.
 	/// </summary>
 	/// <param name="obj">The object to serialize.</param>
-	/// <param name="type">The type to use for serialization.</param>
-	/// <returns>The serialized string representation of the object.</returns>
-	public string Serialize(object obj, Type type);
+	/// <param name="destination">The destination buffer to write the serialized data to.</param>
+	/// <returns>The result of the serialization operation. Success=false with BytesWritten set to required size when destination is too small.</returns>
+	public (bool Success, int BytesWritten) TrySerialize(object obj, Span<byte> destination);
 
 	/// <summary>
-	/// Deserializes a string to an object of the specified type.
+	/// Tries to deserialize the specified data into an object.
 	/// </summary>
-	/// <typeparam name="T">The type to deserialize to.</typeparam>
-	/// <param name="data">The serialized string data.</param>
+	/// <param name="data">The data to deserialize.</param>
 	/// <returns>The deserialized object.</returns>
-	public T Deserialize<T>(string data);
+	public object? Deserialize(ReadOnlySpan<byte> data);
 
 	/// <summary>
-	/// Deserializes a string to an object of the specified type.
+	/// Tries to deserialize the specified data into a specific type.
 	/// </summary>
-	/// <param name="data">The serialized string data.</param>
-	/// <param name="type">The type to deserialize to.</param>
+	/// <typeparam name="T">The type to deserialize into.</typeparam>
+	/// <param name="data">The data to deserialize.</param>
 	/// <returns>The deserialized object.</returns>
-	public object Deserialize(string data, Type type);
+	public T? Deserialize<T>(ReadOnlySpan<byte> data)
+		=> (T?)Deserialize(data);
 
 	/// <summary>
-	/// Asynchronously serializes an object to its string representation.
-	/// </summary>
-	/// <typeparam name="T">The type of object to serialize.</typeparam>
-	/// <param name="obj">The object to serialize.</param>
-	/// <param name="cancellationToken">A cancellation token to cancel the operation.</param>
-	/// <returns>A task that represents the asynchronous serialization operation.</returns>
-	public Task<string> SerializeAsync<T>(T obj, CancellationToken cancellationToken = default)
-		=> cancellationToken.IsCancellationRequested
-			? Task.FromCanceled<string>(cancellationToken)
-			: Task.Run(() => Serialize(obj), cancellationToken);
-
-	/// <summary>
-	/// Asynchronously serializes an object to its string representation using the specified type.
+	/// Tries to serialize the specified object into the destination buffer asynchronously.
 	/// </summary>
 	/// <param name="obj">The object to serialize.</param>
-	/// <param name="type">The type to use for serialization.</param>
-	/// <param name="cancellationToken">A cancellation token to cancel the operation.</param>
-	/// <returns>A task that represents the asynchronous serialization operation.</returns>
-	public Task<string> SerializeAsync(object obj, Type type, CancellationToken cancellationToken = default)
+	/// <param name="destination">The destination buffer to write the serialized data to.</param>
+	/// <param name="cancellationToken">The cancellation token.</param>
+	/// <returns>The result of the serialization operation. Success=false with BytesWritten set to required size when destination is too small.</returns>
+	public Task<(bool Success, int BytesWritten)> TrySerializeAsync(object obj, Memory<byte> destination, CancellationToken cancellationToken = default)
 		=> cancellationToken.IsCancellationRequested
-			? Task.FromCanceled<string>(cancellationToken)
-			: Task.Run(() => Serialize(obj, type), cancellationToken);
+			? Task.FromCanceled<(bool Success, int BytesWritten)>(cancellationToken)
+			: Task.Run(() => TrySerialize(obj, destination.Span), cancellationToken);
 
 	/// <summary>
-	/// Asynchronously deserializes a string to an object of the specified type.
+	/// Tries to deserialize the specified data into an object asynchronously.
 	/// </summary>
-	/// <typeparam name="T">The type to deserialize to.</typeparam>
-	/// <param name="data">The serialized string data.</param>
-	/// <param name="cancellationToken">A cancellation token to cancel the operation.</param>
-	/// <returns>A task that represents the asynchronous deserialization operation.</returns>
-	public Task<T> DeserializeAsync<T>(string data, CancellationToken cancellationToken = default)
+	/// <param name="data">The data to deserialize.</param>
+	/// <param name="cancellationToken">The cancellation token.</param>
+	/// <returns>The deserialized object.</returns>
+	public Task<object?> DeserializeAsync(ReadOnlyMemory<byte> data, CancellationToken cancellationToken = default)
 		=> cancellationToken.IsCancellationRequested
-			? Task.FromCanceled<T>(cancellationToken)
-			: Task.Run(() => Deserialize<T>(data), cancellationToken);
+			? Task.FromCanceled<object?>(cancellationToken)
+			: Task.Run(() => Deserialize(data.Span), cancellationToken);
 
 	/// <summary>
-	/// Asynchronously deserializes a string to an object of the specified type.
+	/// Tries to deserialize the specified data into a specific type asynchronously.
 	/// </summary>
-	/// <param name="data">The serialized string data.</param>
-	/// <param name="type">The type to deserialize to.</param>
-	/// <param name="cancellationToken">A cancellation token to cancel the operation.</param>
-	/// <returns>A task that represents the asynchronous deserialization operation.</returns>
-	public Task<object> DeserializeAsync(string data, Type type, CancellationToken cancellationToken = default)
+	/// <typeparam name="T">The type to deserialize into.</typeparam>
+	/// <param name="data">The data to deserialize.</param>
+	/// <param name="cancellationToken">The cancellation token.</param>
+	/// <returns>The deserialized object.</returns>
+	public Task<T?> DeserializeAsync<T>(ReadOnlyMemory<byte> data, CancellationToken cancellationToken = default)
 		=> cancellationToken.IsCancellationRequested
-			? Task.FromCanceled<object>(cancellationToken)
-			: Task.Run(() => Deserialize(data, type), cancellationToken);
+			? Task.FromCanceled<T?>(cancellationToken)
+			: Task.Run(() => Deserialize<T>(data.Span), cancellationToken);
+
+	/// <summary>
+	/// Serializes the specified object.
+	/// </summary>
+	/// <param name="obj">The object to serialize.</param>
+	/// <returns>A string containing the serialized data.</returns>
+	public string Serialize(object obj)
+	{
+		long estimatedSize = 1024;
+		Span<byte> destination = new byte[estimatedSize];
+		(bool success, int bytesWritten) = TrySerialize(obj, destination);
+		if (!success)
+		{
+			if (bytesWritten <= 0)
+			{
+				throw new InvalidOperationException("Serialization failed to produce output with the allocated buffer.");
+			}
+			destination = new byte[bytesWritten];
+			(success, bytesWritten) = TrySerialize(obj, destination);
+			if (!success)
+			{
+				throw new InvalidOperationException("Serialization failed to produce output with the allocated buffer.");
+			}
+		}
+
+		return Encoding.UTF8.GetString(destination[..bytesWritten]);
+	}
 }

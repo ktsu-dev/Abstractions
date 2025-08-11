@@ -5,7 +5,6 @@
 namespace ktsu.Abstractions;
 
 using System;
-using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -15,93 +14,95 @@ using System.Threading.Tasks;
 public interface ICompressionProvider
 {
 	/// <summary>
-	/// Compresses the specified data (synchronous, canonical input type).
+	/// Tries to compress the specified data into the provided destination buffer.
 	/// </summary>
 	/// <param name="data">The data to compress.</param>
-	/// <param name="level">The compression level (1-9, where 9 is maximum compression).</param>
-	/// <returns>The compressed data.</returns>
-	public byte[] Compress(ReadOnlySpan<byte> data, int level = 6);
+	/// <param name="destination">The destination buffer to write the compressed data to.</param>
+	/// <returns>The result of the compression operation. Success=false with BytesWritten set to required size when destination is too small.</returns>
+	public (bool Success, int BytesWritten) TryCompress(ReadOnlySpan<byte> data, Span<byte> destination);
 
 	/// <summary>
-	/// Convenience overload that forwards to the canonical span-based method.
-	/// </summary>
-	/// <param name="data">The data to compress.</param>
-	/// <param name="level">The compression level (1-9, where 9 is maximum compression).</param>
-	/// <returns>The compressed data.</returns>
-	public byte[] Compress(byte[] data, int level = 6) => Compress(data.AsSpan(), level);
-
-	/// <summary>
-	/// Decompresses the specified compressed data (synchronous, canonical input type).
+	/// Tries to decompress the specified compressed data into the provided destination buffer.
 	/// </summary>
 	/// <param name="compressedData">The compressed data to decompress.</param>
-	/// <returns>The decompressed data.</returns>
-	public byte[] Decompress(ReadOnlySpan<byte> compressedData);
+	/// <param name="destination">The destination buffer to write the decompressed data to.</param>
+	/// <returns>The result of the decompression operation. Success=false with BytesWritten set to required size when destination is too small.</returns>
+	public (bool Success, int BytesWritten) TryDecompress(ReadOnlySpan<byte> compressedData, Span<byte> destination);
 
 	/// <summary>
-	/// Convenience overload that forwards to the canonical span-based method.
-	/// </summary>
-	/// <param name="compressedData">The compressed data to decompress.</param>
-	/// <returns>The decompressed data.</returns>
-	public byte[] Decompress(byte[] compressedData) => Decompress(compressedData.AsSpan());
-
-	/// <summary>
-	/// Asynchronously compresses the specified data (canonical async input type).
+	/// Asynchronously tries to compress the specified data into the provided destination buffer.
 	/// </summary>
 	/// <param name="data">The data to compress.</param>
-	/// <param name="level">The compression level (1-9, where 9 is maximum compression).</param>
-	/// <param name="cancellationToken">A cancellation token.</param>
-	/// <returns>A task that represents the asynchronous compression operation.</returns>
-	public Task<byte[]> CompressAsync(ReadOnlyMemory<byte> data, int level = 6, CancellationToken cancellationToken = default)
+	/// <param name="destination">The destination buffer to write the compressed data to.</param>
+	/// <param name="cancellationToken">The cancellation token.</param>
+	/// <returns>The result of the compression operation. Success=false with BytesWritten set to required size when destination is too small.</returns>
+	public Task<(bool Success, int BytesWritten)> TryCompressAsync(ReadOnlyMemory<byte> data, Memory<byte> destination, CancellationToken cancellationToken = default)
 		=> cancellationToken.IsCancellationRequested
-			? Task.FromCanceled<byte[]>(cancellationToken)
-			: Task.Run(() => Compress(data.Span, level), cancellationToken);
+			? Task.FromCanceled<(bool Success, int BytesWritten)>(cancellationToken)
+			: Task.Run(() => TryCompress(data.Span, destination.Span), cancellationToken);
 
 	/// <summary>
-	/// Convenience overload that forwards to the canonical memory-based async method.
+	/// Asynchronously tries to decompress the specified compressed data into the provided destination buffer.
+	/// </summary>
+	/// <param name="compressedData">The compressed data to decompress.</param>
+	/// <param name="destination">The destination buffer to write the decompressed data to.</param>
+	/// <param name="cancellationToken">The cancellation token.</param>
+	/// <returns>The result of the decompression operation. Success=false with BytesWritten set to required size when destination is too small.</returns>
+	public Task<(bool Success, int BytesWritten)> TryDecompressAsync(ReadOnlyMemory<byte> compressedData, Memory<byte> destination, CancellationToken cancellationToken = default)
+		=> cancellationToken.IsCancellationRequested
+			? Task.FromCanceled<(bool Success, int BytesWritten)>(cancellationToken)
+			: Task.Run(() => TryDecompress(compressedData.Span, destination.Span), cancellationToken);
+
+	/// <summary>
+	/// Compresses the specified data.
 	/// </summary>
 	/// <param name="data">The data to compress.</param>
-	/// <param name="level">The compression level (1-9, where 9 is maximum compression).</param>
-	/// <param name="cancellationToken">A cancellation token.</param>
-	/// <returns>A task that represents the asynchronous compression operation.</returns>
-	public Task<byte[]> CompressAsync(byte[] data, int level = 6, CancellationToken cancellationToken = default)
-		=> CompressAsync(data.AsMemory(), level, cancellationToken);
+	/// <returns>A byte array containing the compressed data.</returns>
+	public byte[] Compress(ReadOnlySpan<byte> data)
+	{
+		long estimatedSize = data.Length * 1;
+		Span<byte> destination = new byte[estimatedSize];
+		(bool success, int bytesWritten) = TryCompress(data, destination);
+		if (!success)
+		{
+			if (bytesWritten <= 0)
+			{
+				throw new InvalidOperationException("Compression failed to produce output with the allocated buffer.");
+			}
+			destination = new byte[bytesWritten];
+			(success, bytesWritten) = TryCompress(data, destination);
+			if (!success)
+			{
+				throw new InvalidOperationException("Compression failed to produce output with the allocated buffer.");
+			}
+		}
+
+		return destination[..bytesWritten].ToArray();
+	}
 
 	/// <summary>
-	/// Asynchronously decompresses the specified compressed data (canonical async input type).
+	/// Decompresses the specified compressed data.
 	/// </summary>
 	/// <param name="compressedData">The compressed data to decompress.</param>
-	/// <param name="cancellationToken">A cancellation token.</param>
-	/// <returns>A task that represents the asynchronous decompression operation.</returns>
-	public Task<byte[]> DecompressAsync(ReadOnlyMemory<byte> compressedData, CancellationToken cancellationToken = default)
-		=> cancellationToken.IsCancellationRequested
-			? Task.FromCanceled<byte[]>(cancellationToken)
-			: Task.Run(() => Decompress(compressedData.Span), cancellationToken);
-
-	/// <summary>
-	/// Convenience overload that forwards to the canonical memory-based async method.
-	/// </summary>
-	/// <param name="compressedData">The compressed data to decompress.</param>
-	/// <param name="cancellationToken">A cancellation token.</param>
-	/// <returns>A task that represents the asynchronous decompression operation.</returns>
-	public Task<byte[]> DecompressAsync(byte[] compressedData, CancellationToken cancellationToken = default)
-		=> DecompressAsync(compressedData.AsMemory(), cancellationToken);
-
-	/// <summary>
-	/// Asynchronously compresses the specified stream and returns compressed bytes.
-	/// Implementers may override to perform true streaming compression.
-	/// </summary>
-	/// <param name="data">The input stream to read.</param>
-	/// <param name="level">The compression level.</param>
-	/// <param name="cancellationToken">A cancellation token.</param>
-	/// <returns>The compressed data.</returns>
-	public Task<byte[]> CompressAsync(Stream data, int level = 6, CancellationToken cancellationToken = default);
-
-	/// <summary>
-	/// Asynchronously decompresses the specified stream and returns decompressed bytes.
-	/// Implementers may override to perform true streaming decompression.
-	/// </summary>
-	/// <param name="compressedData">The compressed input stream to read.</param>
-	/// <param name="cancellationToken">A cancellation token.</param>
-	/// <returns>The decompressed data.</returns>
-	public Task<byte[]> DecompressAsync(Stream compressedData, CancellationToken cancellationToken = default);
+	/// <returns>A byte array containing the decompressed data.</returns>
+	public byte[] Decompress(ReadOnlySpan<byte> compressedData)
+	{
+		long estimatedSize = compressedData.Length * 2;
+		Span<byte> destination = new byte[estimatedSize];
+		(bool success, int bytesWritten) = TryDecompress(compressedData, destination);
+		if (!success)
+		{
+			if (bytesWritten <= 0)
+			{
+				throw new InvalidOperationException("Decompression failed to produce output with the allocated buffer.");
+			}
+			destination = new byte[bytesWritten];
+			(success, bytesWritten) = TryDecompress(compressedData, destination);
+			if (!success)
+			{
+				throw new InvalidOperationException("Decompression failed to produce output with the allocated buffer.");
+			}
+		}
+		return destination[..bytesWritten].ToArray();
+	}
 }

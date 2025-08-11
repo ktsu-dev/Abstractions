@@ -5,7 +5,6 @@
 namespace ktsu.Abstractions;
 
 using System;
-using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -15,46 +14,66 @@ using System.Threading.Tasks;
 public interface IHashProvider
 {
 	/// <summary>
-	/// Hashes the specified data (synchronous, canonical input type).
+	/// The length of the hash in bytes.
 	/// </summary>
-	/// <param name="data">The data to hash.</param>
-	/// <returns>The binary hash of the data.</returns>
-	public byte[] Hash(ReadOnlySpan<byte> data);
+	public int HashLengthBytes { get; }
 
 	/// <summary>
-	/// Asynchronously hashes the specified data (canonical async input type).
-	/// Default implementation wraps the synchronous <see cref="Hash(ReadOnlySpan{byte})"/>.
+	/// Tries to hash the specified data into the provided hash buffer.
+	/// </summary>
+	/// <param name="data">The data to hash.</param>
+	/// <param name="destination">The hash buffer to write the result to.</param>
+	/// <returns>The result of the hash operation. Success=false with BytesWritten set to required size when destination is too small.</returns>
+	public (bool Success, int BytesWritten) TryHash(ReadOnlySpan<byte> data, Span<byte> destination);
+
+	/// <summary>
+	/// Tries to hash the specified data into the provided hash buffer asynchronously.
+	/// </summary>
+	/// <param name="data">The data to hash.</param>
+	/// <param name="destination">The hash buffer to write the result to.</param>
+	/// <param name="cancellationToken">The cancellation token.</param>
+	/// <returns>The result of the hash operation. Success=false with BytesWritten set to required size when destination is too small.</returns>
+	public Task<(bool Success, int BytesWritten)> TryHashAsync(ReadOnlyMemory<byte> data, Memory<byte> destination, CancellationToken cancellationToken = default)
+	{
+		return cancellationToken.IsCancellationRequested
+			? Task.FromCanceled<(bool Success, int BytesWritten)>(cancellationToken)
+			: Task.Run(() => TryHash(data.Span, destination.Span), cancellationToken);
+	}
+
+	/// <summary>
+	/// Asynchronously hashes the specified data.
 	/// </summary>
 	/// <param name="data">The data to hash.</param>
 	/// <param name="cancellationToken">The cancellation token.</param>
-	/// <returns>The binary hash of the data.</returns>
+	/// <returns>A byte array containing the hash of the data.</returns>
 	public Task<byte[]> HashAsync(ReadOnlyMemory<byte> data, CancellationToken cancellationToken = default)
 		=> cancellationToken.IsCancellationRequested
 			? Task.FromCanceled<byte[]>(cancellationToken)
 			: Task.Run(() => Hash(data.Span), cancellationToken);
 
 	/// <summary>
-	/// Asynchronously hashes data from a stream. Implementers should read the stream and compute the hash.
-	/// </summary>
-	/// <param name="data">The stream to read and hash.</param>
-	/// <param name="cancellationToken">The cancellation token.</param>
-	/// <returns>The binary hash of the stream contents.</returns>
-	public Task<byte[]> HashAsync(Stream data, CancellationToken cancellationToken = default);
-
-
-	/// <summary>
-	/// Convenience overload that forwards to the canonical span-based method.
+	/// Hashes the specified data.
 	/// </summary>
 	/// <param name="data">The data to hash.</param>
-	/// <returns>The binary hash of the data.</returns>
-	public byte[] Hash(byte[] data) => Hash(data.AsSpan());
+	/// <returns>A byte array containing the hash of the data.</returns>
+	public byte[] Hash(ReadOnlySpan<byte> data)
+	{
+		Span<byte> hash = new byte[HashLengthBytes];
+		(bool success, int bytesWritten) = TryHash(data, hash);
+		if (!success)
+		{
+			if (bytesWritten <= 0)
+			{
+				throw new InvalidOperationException("Hashing failed to produce output with the allocated buffer.");
+			}
+			hash = new byte[bytesWritten];
+			(success, bytesWritten) = TryHash(data, hash);
+			if (!success)
+			{
+				throw new InvalidOperationException("Hashing failed to produce output with the allocated buffer.");
+			}
+		}
 
-	/// <summary>
-	/// Convenience overload that forwards to the canonical memory-based async method.
-	/// </summary>
-	/// <param name="data">The data to hash.</param>
-	/// <param name="cancellationToken">The cancellation token.</param>
-	/// <returns>The binary hash of the data.</returns>
-	public Task<byte[]> HashAsync(byte[] data, CancellationToken cancellationToken = default)
-		=> HashAsync(data.AsMemory(), cancellationToken);
+		return hash[..bytesWritten].ToArray();
+	}
 }
