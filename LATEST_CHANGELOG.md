@@ -1,5 +1,5 @@
-## v1.0.5 (patch)
+## v1.0.6 (patch)
 
-Changes since v1.0.4:
+Changes since v1.0.5:
 
-- Update CompatibilitySuppressions.xml to reflect changes in diagnostic IDs and target methods for the ktsu.Abstractions library, enhancing compatibility with .NET 8.0. This includes updates for compression, encryption, hashing, and obfuscation methods, ensuring accurate suppression of diagnostics across versions. ([@matt-edmondson](https://github.com/matt-edmondson))
+- Refactor ISerializationProvider interface to use generic type parameters for deserialization methods, enhancing type safety and usability. Update CompatibilitySuppressions.xml to remove obsolete suppressions related to nullable attributes, ensuring compatibility with .NET 8.0. ([@matt-edmondson](https://github.com/matt-edmondson))
