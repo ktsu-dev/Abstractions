@@ -1,3 +1,6 @@
+## v1.0.7
+
+Changes since v1.0.7:
 ## v1.0.7 (patch)
 
 Changes since v1.0.6:
