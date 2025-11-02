@@ -1,5 +1,5 @@
-## v1.0.9 (patch)
+## v1.0.10 (patch)
 
-Changes since v1.0.8:
+Changes since v1.0.9:
 
-- Enhance GitHub Actions workflow to set outputs based on pipeline results for skipped releases, ensuring fallback to build configuration values when necessary. ([@matt-edmondson](https://github.com/matt-edmondson))
+- Enhance project type detection in update-winget-manifests.ps1 by adding checks for generated NuGet packages and refining logic to distinguish between library, executable, test, and demo projects. ([@matt-edmondson](https://github.com/matt-edmondson))
