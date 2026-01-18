@@ -2,11 +2,13 @@
   <Sdk Name="ktsu.Sdk" />
 
   <PropertyGroup>
-    <TargetFrameworks>net9.0;net8.0;net7.0;net6.0;netstandard2.1</TargetFrameworks>
+    <TargetFrameworks>net10.0;net9.0;net8.0;net7.0;net6.0;netstandard2.1</TargetFrameworks>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="System.Memory" />
+    <PackageReference Include="Microsoft.SourceLink.AzureRepos.Git" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" />
+    <PackageReference Include="Polyfill" />
     <PackageReference Include="Testably.Abstractions" />
   </ItemGroup>
 
