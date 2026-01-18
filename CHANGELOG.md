@@ -1,8 +1,8 @@
-## v1.0.11-pre.3 (prerelease)
+## v1.0.11 (patch)
 
-Changes since v1.0.11-pre.2:
+Changes since v1.0.10:
 
-- Sync scripts\update-winget-manifests.ps1 ([@ktsu[bot]](https://github.com/ktsu[bot]))
+- Update project configuration and add CLAUDE.md for documentation ([@matt-edmondson](https://github.com/matt-edmondson))
 ## v1.0.11-pre.3 (prerelease)
 
 Changes since v1.0.11-pre.2:
