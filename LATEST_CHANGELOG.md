@@ -1,5 +1,3 @@
-## v1.0.11 (patch)
+## v1.0.11
 
-Changes since v1.0.10:
-
-- Update project configuration and add CLAUDE.md for documentation ([@matt-edmondson](https://github.com/matt-edmondson))
+No significant changes detected since v1.0.11.
