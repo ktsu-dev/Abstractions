@@ -1,3 +1,5 @@
-## v1.0.11
+## v1.0.12 (patch)
 
-No significant changes detected since v1.0.11.
+Changes since v1.0.11:
+
+- Update .NET version to 10.0 and adjust test coverage reporting ([@matt-edmondson](https://github.com/matt-edmondson))
