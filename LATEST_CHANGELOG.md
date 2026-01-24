@@ -1,6 +1,6 @@
-## v1.0.12 (patch)
+## v1.0.13-pre.1 (prerelease)
 
-Changes since v1.0.11:
+Changes since v1.0.12:
 
-- Update .NET version to 10.0 and adjust test coverage reporting ([@matt-edmondson](https://github.com/matt-edmondson))
-- Add test project detection to Invoke-DotNetTest function ([@matt-edmondson](https://github.com/matt-edmondson))
+- Sync .gitignore ([@ktsu[bot]](https://github.com/ktsu[bot]))
+- Merge remote-tracking branch 'refs/remotes/origin/main' ([@ktsu[bot]](https://github.com/ktsu[bot]))

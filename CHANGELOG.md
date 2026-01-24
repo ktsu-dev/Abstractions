@@ -1,3 +1,9 @@
+## v1.0.13-pre.1 (prerelease)
+
+Changes since v1.0.12:
+
+- Sync .gitignore ([@ktsu[bot]](https://github.com/ktsu[bot]))
+- Merge remote-tracking branch 'refs/remotes/origin/main' ([@ktsu[bot]](https://github.com/ktsu[bot]))
 ## v1.0.12 (patch)
 
 Changes since v1.0.11:
