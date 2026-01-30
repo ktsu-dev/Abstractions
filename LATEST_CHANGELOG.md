@@ -1,6 +1,5 @@
-## v1.0.13-pre.5 (prerelease)
+## v1.0.13 (patch)
 
-Changes since v1.0.13-pre.4:
+Changes since v1.0.12:
 
-- Sync global.json ([@ktsu[bot]](https://github.com/ktsu[bot]))
-- Merge remote-tracking branch 'refs/remotes/origin/main' ([@ktsu[bot]](https://github.com/ktsu[bot]))
+- Remove .github\workflows\project.yml ([@matt-edmondson](https://github.com/matt-edmondson))
