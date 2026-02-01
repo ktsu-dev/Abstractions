@@ -39,10 +39,7 @@ public interface ISerializationProvider
 	/// <returns>The deserialized object.</returns>
 	public T? Deserialize<T>(TextReader reader)
 	{
-		if (reader is null)
-		{
-			throw new ArgumentNullException(nameof(reader));
-		}
+		Ensure.NotNull(reader);
 
 		string data = reader.ReadToEnd();
 		byte[] bytes = Encoding.UTF8.GetBytes(data);

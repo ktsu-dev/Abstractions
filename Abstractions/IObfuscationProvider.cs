@@ -12,7 +12,6 @@ using System.Threading.Tasks;
 /// <summary>
 /// Interface for obfuscation providers that can apply reversible or one-way obfuscation.
 /// </summary>
-[SuppressMessage("Maintainability", "CA1510:Use ArgumentNullException throw helper", Justification = "Not available in netstandard")]
 public interface IObfuscationProvider
 {
 	/// <summary>
@@ -39,10 +38,7 @@ public interface IObfuscationProvider
 	/// <returns>True if the obfuscation was successful, false otherwise.</returns>
 	public bool TryObfuscate(ReadOnlySpan<byte> data, Stream writer)
 	{
-		if (writer is null)
-		{
-			throw new ArgumentNullException(nameof(writer));
-		}
+		Ensure.NotNull(writer);
 
 		using MemoryStream inputStream = new(data.ToArray());  // Copy here unavoidable
 		return TryObfuscate(inputStream, writer);
@@ -56,10 +52,7 @@ public interface IObfuscationProvider
 	/// <returns>True if the obfuscation was successful, false otherwise.</returns>
 	public bool TryObfuscate(string data, Stream writer)
 	{
-		if (writer is null)
-		{
-			throw new ArgumentNullException(nameof(writer));
-		}
+		Ensure.NotNull(writer);
 
 		using MemoryStream inputStream = new(Encoding.UTF8.GetBytes(data));
 		return TryObfuscate(inputStream, writer);
@@ -72,10 +65,7 @@ public interface IObfuscationProvider
 	/// <returns>The obfuscated data.</returns>
 	public string Obfuscate(string data)
 	{
-		if (data is null)
-		{
-			throw new ArgumentNullException(nameof(data));
-		}
+		Ensure.NotNull(data);
 
 		using MemoryStream outputStream = new();
 		TryObfuscate(data, outputStream);
@@ -177,10 +167,7 @@ public interface IObfuscationProvider
 	/// <returns>True if the deobfuscation was successful, false otherwise.</returns>
 	public bool TryDeobfuscate(ReadOnlySpan<byte> data, Stream writer)
 	{
-		if (writer is null)
-		{
-			throw new ArgumentNullException(nameof(writer));
-		}
+		Ensure.NotNull(writer);
 
 		using MemoryStream inputStream = new(data.ToArray());  // Copy here unavoidable
 		return TryDeobfuscate(inputStream, writer);
@@ -194,10 +181,7 @@ public interface IObfuscationProvider
 	/// <returns>True if the deobfuscation was successful, false otherwise.</returns>
 	public bool TryDeobfuscate(string data, Stream writer)
 	{
-		if (writer is null)
-		{
-			throw new ArgumentNullException(nameof(writer));
-		}
+		Ensure.NotNull(writer);
 
 		using MemoryStream inputStream = new(Encoding.UTF8.GetBytes(data));
 		return TryDeobfuscate(inputStream, writer);
@@ -210,10 +194,7 @@ public interface IObfuscationProvider
 	/// <returns>The deobfuscated data.</returns>
 	public string Deobfuscate(string data)
 	{
-		if (data is null)
-		{
-			throw new ArgumentNullException(nameof(data));
-		}
+		Ensure.NotNull(data);
 
 		using MemoryStream inputStream = new(Encoding.UTF8.GetBytes(data));
 		using MemoryStream outputStream = new();
