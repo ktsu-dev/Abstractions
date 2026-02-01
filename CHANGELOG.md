@@ -1,5 +1,8 @@
 ## v1.0.14-pre.1 (prerelease)
 
+Incremental prerelease update.
+## v1.0.14-pre.1 (prerelease)
+
 Changes since v1.0.13:
 
 - Sync global.json ([@ktsu[bot]](https://github.com/ktsu[bot]))
