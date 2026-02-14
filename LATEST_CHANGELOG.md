@@ -1,6 +1,7 @@
-## v1.0.16 (patch)
+## v1.0.17 (patch)
 
-Changes since v1.0.15:
+Changes since v1.0.16:
 
-- Remove skipped_release logic from build steps in dotnet.yml ([@matt-edmondson](https://github.com/matt-edmondson))
+- Merge remote-tracking branch 'refs/remotes/origin/main' ([@ktsu[bot]](https://github.com/ktsu[bot]))
+- Sync global.json ([@ktsu[bot]](https://github.com/ktsu[bot]))
 
