@@ -1,3 +1,9 @@
+## v1.0.15 (patch)
+
+Changes since v1.0.14:
+
+- api suppressions ([@matt-edmondson](https://github.com/matt-edmondson))
+
 ## v1.0.14 (patch)
 
 Changes since v1.0.13:
@@ -38,9 +44,7 @@ Changes since v1.0.14-pre.1:
 
 ## v1.0.14-pre.1 (prerelease)
 
-Changes since v1.0.13:
-
-- Refactor null checks in IObfuscationProvider and ISerializationProvider to use Ensure.NotNull method; update Polyfill package version to 9.8.0 ([@matt-edmondson](https://github.com/matt-edmondson))
+No significant changes detected since v1.0.14.
 
 ## v1.0.13 (patch)
 
