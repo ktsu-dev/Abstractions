@@ -1,6 +1,4 @@
-## v1.4.0 (minor)
+## v1.4.0
 
-Changes since v1.3.0:
-
-- Add persistence providers: AppData, FileSystem, and Temp ([@matt-edmondson](https://github.com/matt-edmondson))
+No significant changes detected since v1.4.0.
 
