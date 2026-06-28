@@ -178,7 +178,7 @@ public sealed class Temp<TKey>(
 			List<TKey> keys = [.. files
 				.Select(f => _fileSystemProvider.Path.GetFileNameWithoutExtension(f))
 				.Where(name => !string.IsNullOrEmpty(name))
-				.Select(name => PersistenceProviderUtilities.ConvertToKey<TKey>(name!))
+				.Select(PersistenceProviderUtilities.ConvertToKey<TKey>)
 				.Where(key => key is not null)
 				.Cast<TKey>()];
 
@@ -245,7 +245,7 @@ public sealed class Temp<TKey>(
 
 	private string GetFilePath(TKey key)
 	{
-		string fileName = PersistenceProviderUtilities.GetSafeFileName(key.ToString()!) + ".json";
+		string fileName = PersistenceProviderUtilities.GetSafeFileName(key.ToString()) + ".json";
 		return _fileSystemProvider.Path.Combine(_tempDirectory, fileName);
 	}
 
