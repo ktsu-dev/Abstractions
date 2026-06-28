@@ -245,7 +245,7 @@ public sealed class Temp<TKey>(
 
 	private string GetFilePath(TKey key)
 	{
-		string fileName = PersistenceProviderUtilities.GetSafeFileName(key.ToString()) + ".json";
+		string fileName = PersistenceProviderUtilities.GetSafeFileName(key.ToString() ?? string.Empty) + ".json";
 		return _fileSystemProvider.Path.Combine(_tempDirectory, fileName);
 	}
 
